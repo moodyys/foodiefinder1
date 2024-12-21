@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gcm_defaultSenderId" translatable="false">456235179156</string>
+    <string name="google_api_key" translatable="false">AIzaSyBqb7wLY7u_cEsXmSpa--f5tvReiaakndA</string>
+    <string name="google_app_id" translatable="false">1:456235179156:android:c5cd3f9f8236c53b95a881</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBqb7wLY7u_cEsXmSpa--f5tvReiaakndA</string>
+    <string name="google_storage_bucket" translatable="false">foodiefinder1-aee36.firebasestorage.app</string>
+    <string name="project_id" translatable="false">foodiefinder1-aee36</string>
+    <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        
+        <item name="android:windowBackground">@drawable/launch_background</item>
+    </style>
+    <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        <item name="android:windowBackground">?android:colorBackground</item>
+    </style>
+</resources>

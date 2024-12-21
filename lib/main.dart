@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'AdminDashBoard.dart';
 import 'login.dart';
 import 'package:firebase_core/firebase_core.dart';
-
+import 'package:foodiefinder1/Userhomepage.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const LoginPage(), // Set AdminDashBoard as the initial screen
+      home: const Userhomepage(), // Set AdminDashBoard as the initial screen
     );
   }
 }

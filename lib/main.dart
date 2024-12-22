@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
         '/settings': (context) => const Settings02Widget(),
         '/manageUsers': (context) => const UsersWidget(), // Added UsersWidget route
         '/flaggedReviews': (context) => const FlaggedreviewsWidget(), // Added FlaggedreviewsWidget route
-        '/manageRestaurants': (context) => const ManagerestaurantsWidget(), // Added ManagerestaurantsWidget route
+        //'/manageRestaurants': (context) => const ManagerestaurantsWidget(), // Added ManagerestaurantsWidget route
       },
     );
   }

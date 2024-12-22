@@ -1,106 +1,89 @@
 import 'package:flutter/material.dart';
 
-class myreviews extends StatelessWidget {
+class myreviews extends StatefulWidget {
   const myreviews({Key? key}) : super(key: key);
 
   @override
+  State<myreviews> createState() => _MyReviewsWidgetState();
+}
+
+class _MyReviewsWidgetState extends State<myreviews> {
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Terms of Service'),
-        backgroundColor: Colors.blue,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        key: scaffoldKey,
+        backgroundColor: const Color(0xFFF1F4F8),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Color(0xFF14181B)),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title: const Text(
+            'My Reviews',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF14181B),
+            ),
+          ),
+          centerTitle: true,
+        ),
+        body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Title Section
-              Text(
-                'Terms of Service',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blueAccent,
-                ),
-              ),
-              const SizedBox(height: 16),
-              // Introduction Section
-              const Text(
-                'Welcome to [App Name]! By using our application, you agree to the following terms and conditions. Please read them carefully.',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black87,
-                  height: 1.5,
-                ),
-              ),
-              const SizedBox(height: 16),
-              // Terms Section
-              buildSection(
-                title: '1. User Responsibilities',
-                content:
-                'Users must ensure that all information provided during registration or usage is accurate and up-to-date. Users agree to use the app for lawful purposes only.',
-              ),
-              const SizedBox(height: 16),
-              buildSection(
-                title: '2. Privacy Policy',
-                content:
-                'Your privacy is important to us. Please review our Privacy Policy to understand how we collect, use, and protect your data.',
-              ),
-              const SizedBox(height: 16),
-              buildSection(
-                title: '3. Prohibited Activities',
-                content:
-                'You may not use our app to engage in fraudulent activities, distribute harmful content, or violate any applicable laws and regulations.',
-              ),
-              const SizedBox(height: 16),
-              buildSection(
-                title: '4. Intellectual Property',
-                content:
-                'All content, trademarks, and logos displayed in the app are the property of [App Name] or third-party licensors. Unauthorized use is strictly prohibited.',
-              ),
-              const SizedBox(height: 16),
-              buildSection(
-                title: '5. Liability Limitation',
-                content:
-                'We are not liable for any damages arising from the use or inability to use our app. Your use of the app is at your own risk.',
-              ),
-              const SizedBox(height: 16),
-              buildSection(
-                title: '6. Amendments',
-                content:
-                'We reserve the right to update these terms at any time. Continued use of the app indicates your acceptance of the updated terms.',
-              ),
-              const SizedBox(height: 20),
-              // Conclusion Section
-              Text(
-                'Thank you for using [App Name]. If you have any questions or concerns, please contact us at support@appname.com.',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black87,
-                  height: 1.5,
-                ),
-              ),
-              const SizedBox(height: 20),
-              // Acknowledgement Button
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    padding:
-                    const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-                  ),
-                  child: const Text(
-                    'I Acknowledge',
-                    style: TextStyle(
-                      fontSize: 16,
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Material(
+                  color: Colors.transparent,
+                  elevation: 2,
+                  child: Container(
+                    width: double.infinity,
+                    height: 120,
+                    decoration: const BoxDecoration(
                       color: Colors.white,
                     ),
+                    child: const Padding(
+                      padding: EdgeInsets.all(24.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Username',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF14181B),
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            'Your shared food experiences',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  children: List.generate(3, (index) => buildReviewCard(context)),
                 ),
               ),
             ],
@@ -110,29 +93,105 @@ class myreviews extends StatelessWidget {
     );
   }
 
-  // Helper function to build a styled section
-  Widget buildSection({required String title, required String content}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
+  Widget buildReviewCard(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        'username',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF14181B),
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        'time posted',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF57636C),
+                        ),
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.more_vert,
+                      color: Color(0xFF57636C),
+                    ),
+                    onPressed: () {
+                      print('Options button pressed');
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'post',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF14181B),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Row(
+                    children: const [
+                      Icon(
+                        Icons.favorite_border,
+                        color: Color(0xFF57636C),
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        '42',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Color(0xFF14181B),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 24),
+                  Row(
+                    children: const [
+                      Icon(
+                        Icons.chat_bubble_outline,
+                        color: Color(0xFF57636C),
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        '15',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Color(0xFF14181B),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
-        const SizedBox(height: 8),
-        Text(
-          content,
-          style: const TextStyle(
-            fontSize: 16,
-            color: Colors.black54,
-            height: 1.5,
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

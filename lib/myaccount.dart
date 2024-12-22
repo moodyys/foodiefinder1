@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'favorites.dart';
-import 'myreviews.dart';
+import 'ManageMyReviews.dart';
 import 'editprofile.dart';
 import 'termsofservices.dart';
 
@@ -80,12 +80,12 @@ class myaccount extends StatelessWidget {
             ),
             _buildOptionTile(
               context,
-              title: 'My Reviews',
+              title: 'Manage Reviews',
               icon: Icons.reviews_rounded,
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const myreviews()),
+                  MaterialPageRoute(builder: (context) => const Managemyreviews()),
                 );
               },
             ),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'Userhomepage.dart';
 import 'myaccount.dart';
 import 'restaurants.dart';
+import 'myreviews.dart';
+
 
 class Userhomepage extends StatelessWidget {
   const Userhomepage({super.key});
@@ -134,7 +136,7 @@ class Userhomepage extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),
-            label: 'My Account',
+            label: 'My Reviews',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.restaurant),
@@ -150,7 +152,7 @@ class Userhomepage extends StatelessWidget {
           } else if (index == 1) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const myaccount()),
+              MaterialPageRoute(builder: (context) => const myreviews()),
             );
           } else if (index == 2) {
             Navigator.push(

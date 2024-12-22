@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'myaccount.dart';
 class myreviews extends StatefulWidget {
   const myreviews({Key? key}) : super(key: key);
 
@@ -37,6 +37,19 @@ class _MyReviewsWidgetState extends State<myreviews> {
             ),
           ),
           centerTitle: true,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.account_circle, color: Color(0xFF14181B)),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => myaccount(), // Navigate to your existing MyAccount class
+                  ),
+                );
+              },
+            ),
+          ],
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -53,12 +66,12 @@ class _MyReviewsWidgetState extends State<myreviews> {
                     decoration: const BoxDecoration(
                       color: Colors.white,
                     ),
-                    child: const Padding(
-                      padding: EdgeInsets.all(24.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(24.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             'Username',
                             style: TextStyle(
                               fontSize: 24,
@@ -66,8 +79,8 @@ class _MyReviewsWidgetState extends State<myreviews> {
                               color: Color(0xFF14181B),
                             ),
                           ),
-                          SizedBox(height: 4),
-                          Text(
+                          const SizedBox(height: 4),
+                          const Text(
                             'Your shared food experiences',
                             style: TextStyle(
                               fontSize: 14,

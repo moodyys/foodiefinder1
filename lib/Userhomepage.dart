@@ -1,8 +1,10 @@
-
 import 'package:flutter/material.dart';
+import 'Userhomepage.dart';
+import 'myaccount.dart';
+import 'restaurants.dart';
 
 class Userhomepage extends StatelessWidget {
-  const Userhomepage({Key? key}) : super(key: key);
+  const Userhomepage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,8 +17,8 @@ class Userhomepage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
+            const Padding(
+              padding: EdgeInsets.all(16.0),
               child: Text(
                 'Foodie Finder',
                 style: TextStyle(
@@ -50,7 +52,7 @@ class Userhomepage extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Expanded(
+                              const Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -74,7 +76,7 @@ class Userhomepage extends StatelessWidget {
                                 ),
                               ),
                               IconButton(
-                                icon: Icon(
+                                icon: const Icon(
                                   Icons.keyboard_control_rounded,
                                   color: Colors.grey,
                                 ),
@@ -84,19 +86,19 @@ class Userhomepage extends StatelessWidget {
                               ),
                             ],
                           ),
-                          SizedBox(height: 12),
-                          Text(
+                          const SizedBox(height: 12),
+                          const Text(
                             '(post written)',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey,
                             ),
                           ),
-                          SizedBox(height: 12),
+                          const SizedBox(height: 12),
                           Row(
                             children: [
                               IconButton(
-                                icon: Icon(
+                                icon: const Icon(
                                   Icons.thumb_up_alt_outlined,
                                   color: Colors.grey,
                                 ),
@@ -104,8 +106,8 @@ class Userhomepage extends StatelessWidget {
                                   print('Like button pressed');
                                 },
                               ),
-                              SizedBox(width: 4),
-                              Text(
+                              const SizedBox(width: 4),
+                              const Text(
                                 '3 likes',
                                 style: TextStyle(
                                   fontSize: 14,
@@ -140,22 +142,22 @@ class Userhomepage extends StatelessWidget {
           ),
         ],
         onTap: (index) {
-          // if (index == 0) {
-          //   Navigator.push(
-          //     context,
-          //     MaterialPageRoute(builder: (context) => const Userhomepage()),
-          //   );
-          // } else if (index == 1) {
-          //   Navigator.push(
-          //     context,
-          //     MaterialPageRoute(builder: (context) => const MyAccount()),
-          //   );
-          // } else if (index == 2) {
-          //   Navigator.push(
-          //     context,
-          //     MaterialPageRoute(builder: (context) => const Restaurants()),
-          //   );
-          // }
+          if (index == 0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const Userhomepage()),
+            );
+          } else if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const myaccount()),
+            );
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const restaurants()),
+            );
+          }
         },
       ),
     );

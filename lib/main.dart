@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'ManagerestaurantsWidget.dart'; // Import ManagerestaurantsWidget
+//import 'ManagerestaurantsWidget.dart'; // Import ManagerestaurantsWidget
 import 'Settings02Widget.dart'; // Import Settings02Widget
 import 'AnalyticsWidget.dart'; // Import AnalyticsWidget
 import 'login.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'ManagerestaurantsWidget.dart'; // Import ManagerestaurantsWidget
+//import 'ManagerestaurantsWidget.dart'; // Import ManagerestaurantsWidget
 import 'Settings02Widget.dart'; // Import Settings02Widget
 import 'AnalyticsWidget.dart'; // Import AnalyticsWidget
 import 'login.dart';
@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
         '/settings': (context) => const Settings02Widget(),
         '/manageUsers': (context) => const UsersWidget(), // Added UsersWidget route
         '/flaggedReviews': (context) => const FlaggedreviewsWidget(), // Added FlaggedreviewsWidget route
-        '/manageRestaurants': (context) => const ManagerestaurantsWidget(), // Added ManagerestaurantsWidget route
+        //'/manageRestaurants': (context) => const ManagerestaurantsWidget(), // Added ManagerestaurantsWidget route
       },
     );
   }

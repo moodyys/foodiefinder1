@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'AdminDashBoard.dart';
+import 'ManagerestaurantsWidget.dart'; // Import ManagerestaurantsWidget
+import 'Settings02Widget.dart'; // Import Settings02Widget
+import 'AnalyticsWidget.dart'; // Import AnalyticsWidget
 import 'login.dart';
+import 'AdminDashBoard.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:foodiefinder1/Userhomepage.dart';
 void main() async {

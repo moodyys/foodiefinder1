@@ -6,6 +6,9 @@ import 'login.dart';
 import 'AdminDashBoard.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:foodiefinder1/Userhomepage.dart';
+import 'UsersWidget.dart'; // Import UsersWidget
+import 'FlaggedreviewsWidget.dart'; // Import FlaggedreviewsWidget
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -37,7 +40,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Userhomepage(), // Set AdminDashBoard as the initial screen
+      home: const Userhomepage(), // Set Userhomepage as the initial screen
+      routes: {
+        '/adminDashboard': (context) => const AdminDashBoard(),
+        '/analytics': (context) => const AnalyticsWidget(),
+        '/settings': (context) => const Settings02Widget(),
+        '/manageUsers': (context) => const UsersWidget(), // Added UsersWidget route
+        '/flaggedReviews': (context) => const FlaggedreviewsWidget(), // Added FlaggedreviewsWidget route
+        '/manageRestaurants': (context) => const ManagerestaurantsWidget(), // Added ManagerestaurantsWidget route
+      },
     );
   }
 }

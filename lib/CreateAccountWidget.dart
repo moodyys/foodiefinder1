@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:foodiefinder1/Userhomepage.dart';
@@ -187,9 +189,17 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
      User? user = await _auth.signUpWithEmailAndPassword(email, password);
 
      if (user != null){
+
        print("User is successfully created");
+       createUserDocument(user);
        Navigator.pushNamed(context,"/userHomepage");
      }
      else{print("Some error Occured");}
   }
+Future<void> createUserDocument(User? user) async{
+    await FirebaseFirestore.instance.collection("users").doc(user!.email).set({'useremail': user!.email,'username': _fullnameController.text,'userpassword': _passwordController.text});
+
+
+
+}
 }

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:foodiefinder1/Userhomepage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'WelcomePage.dart';
 import 'AdminLogin.dart'; // Import AdminLoginPage here
@@ -37,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
       );
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const AdminDashBoard()),
+        MaterialPageRoute(builder: (context) => const Userhomepage()),
       );
     } on FirebaseAuthException catch (e) {
       setState(() {

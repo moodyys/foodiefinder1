@@ -53,12 +53,12 @@ class ManageMyreviews extends State<Managemyreviews> {
                     decoration: const BoxDecoration(
                       color: Colors.white,
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(24.0),
+                    child: const Padding(
+                      padding: EdgeInsets.all(24.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             'My Reviews',
                             style: TextStyle(
                               fontSize: 24,
@@ -66,8 +66,8 @@ class ManageMyreviews extends State<Managemyreviews> {
                               color: Color(0xFF14181B),
                             ),
                           ),
-                          const SizedBox(height: 4),
-                          const Text(
+                          SizedBox(height: 4),
+                          Text(
                             'Your shared food experiences',
                             style: TextStyle(
                               fontSize: 14,
@@ -113,9 +113,9 @@ class ManageMyreviews extends State<Managemyreviews> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
+                  const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text(
                         'username',
                         style: TextStyle(

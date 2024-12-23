@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Managemyreviews extends StatefulWidget {
   const Managemyreviews({super.key});
@@ -18,78 +19,96 @@ class ManageMyreviews extends State<Managemyreviews> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: const Color(0xFFF1F4F8),
         appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Color(0xFF14181B)),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          title: const Text(
-            'My Reviews',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF14181B),
+          elevation: 5,
+          centerTitle: true,
+          title: ShaderMask(
+            shaderCallback: (bounds) => const LinearGradient(
+              colors:[Color(0xFFFFFFFF), Color(0xFFFFFFFF)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ).createShader(bounds),
+            child: Text(
+              'Manage Reviews',
+              style: GoogleFonts.pacifico(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
           ),
-          centerTitle: true,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFFE989BE), Color(0xFFEDFFC3)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+          ),
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Material(
-                  color: Colors.transparent,
-                  elevation: 2,
-                  child: Container(
-                    width: double.infinity,
-                    height: 120,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                    ),
-                    child: const Padding(
-                      padding: EdgeInsets.all(24.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'My Reviews',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFF14181B),
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFFF4F9FD), Color(0xFFE1EAF5)],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Material(
+                    color: Colors.transparent,
+                    elevation: 2,
+                    child: Container(
+                      width: double.infinity,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Manage Your Reviews',
+                              style: GoogleFonts.balooTamma2(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w600,
+                                color: const Color(0xFF333333),
+                              ),
                             ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            'Your shared food experiences',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Color(0xFF57636C),
+                            const SizedBox(height: 4),
+                            const Text(
+                              'Your shared food experiences',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Color(0xFF57636C),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Column(
-                  children: List.generate(
-                    3,
-                        (index) => buildReviewCard(context),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                    children: List.generate(
+                      3,
+                          (index) => buildReviewCard(context),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -104,6 +123,13 @@ class ManageMyreviews extends State<Managemyreviews> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -113,15 +139,15 @@ class ManageMyreviews extends State<Managemyreviews> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Column(
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    children: const [
                       Text(
                         'username',
                         style: TextStyle(
                           fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF14181B),
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF222222),
                         ),
                       ),
                       SizedBox(height: 4),
@@ -129,7 +155,7 @@ class ManageMyreviews extends State<Managemyreviews> {
                         'time posted',
                         style: TextStyle(
                           fontSize: 12,
-                          color: Color(0xFF57636C),
+                          color: Color(0xFF888888),
                         ),
                       ),
                     ],
@@ -151,14 +177,14 @@ class ManageMyreviews extends State<Managemyreviews> {
                 'post',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Color(0xFF14181B),
+                  color: Color(0xFF444444),
                 ),
               ),
               const SizedBox(height: 12),
-              const Row(
+              Row(
                 children: [
                   Row(
-                    children: [
+                    children: const [
                       Icon(
                         Icons.favorite_border,
                         color: Color(0xFF57636C),
@@ -168,14 +194,14 @@ class ManageMyreviews extends State<Managemyreviews> {
                         '42',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Color(0xFF14181B),
+                          color: Color(0xFF222222),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(width: 24),
+                  const SizedBox(width: 24),
                   Row(
-                    children: [
+                    children: const [
                       Icon(
                         Icons.chat_bubble_outline,
                         color: Color(0xFF57636C),
@@ -185,7 +211,7 @@ class ManageMyreviews extends State<Managemyreviews> {
                         '15',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Color(0xFF14181B),
+                          color: Color(0xFF222222),
                         ),
                       ),
                     ],

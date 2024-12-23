@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Userhomepage(), // Set Userhomepage as the initial screen
+      home: const Userhomepage (), // Set Userhomepage as the initial screen
       routes: {
         '/adminDashboard': (context) => const AdminDashBoard(),
         '/analytics': (context) => const AnalyticsWidget(),

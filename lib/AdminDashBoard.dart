@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'Settings02Widget.dart';
 import 'AnalyticsWidget.dart'; // Import the AnalyticsWidget
+import 'package:google_fonts/google_fonts.dart';
 
 class AdminDashBoard extends StatelessWidget {
   const AdminDashBoard({Key? key}) : super(key: key);
@@ -9,19 +10,42 @@ class AdminDashBoard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Admin Dashboard',
-          style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 24,
+          style: GoogleFonts.balooTamma2(
+            fontSize: 40,
             fontWeight: FontWeight.bold,
+            color: Colors.white, // Set the color to white
           ),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.account_circle, size: 30),
+            onPressed: () {
+              // Add navigation or functionality for the profile icon
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Profile'),
+                  content: const Text('Profile functionality coming soon!'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Close'),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xFF6A11CB), Color(0xFF2575FC)],
+              colors: [Color(0xFFE989BE), Color(0xFFEDFFC3)], // Use the same gradient
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -32,7 +56,7 @@ class AdminDashBoard extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFFEDE574), Color(0xFFE1F5C4)],
+            colors: [Color(0xFFE989BE), Color(0xFFEDFFC3)], // Use the same gradient
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -45,7 +69,7 @@ class AdminDashBoard extends StatelessWidget {
                 context,
                 title: 'Analytics',
                 icon: Icons.analytics,
-                gradientColors: [Color(0xFF56CCF2), Color(0xFF2F80ED)],
+                gradientColors: [Color(0xFFE989BE), Color(0xFFEDFFC3)], // Use the same gradient
                 onPressed: () {
                   // Navigate to the AnalyticsWidget screen
                   Navigator.push(
@@ -59,7 +83,7 @@ class AdminDashBoard extends StatelessWidget {
                 context,
                 title: 'Settings',
                 icon: Icons.settings,
-                gradientColors: [Color(0xFFF2994A), Color(0xFFF2C94C)],
+                gradientColors: [Color(0xFFE989BE), Color(0xFFEDFFC3)], // Use the same gradient
                 onPressed: () {
                   Navigator.push(
                     context,

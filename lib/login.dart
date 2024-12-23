@@ -2,8 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'WelcomePage.dart';
+import 'AdminLogin.dart'; // Import AdminLoginPage here
 import 'AdminDashBoard.dart';
-// import 'signup.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -35,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
       );
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => AdminDashBoard()),
+        MaterialPageRoute(builder: (context) => const AdminDashBoard()),
       );
     } on FirebaseAuthException catch (e) {
       setState(() {
@@ -55,127 +57,195 @@ class _LoginPageState extends State<LoginPage> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: const Color(0xFFE989BE),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              // Navigate back to the WelcomePage when back button is pressed
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const WelcomePage()),
+              );
+            },
+          ),
+          title: Text(
+            'Login',
+            style: GoogleFonts.balooTamma2(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFFF4F9FD),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // Navigate to AdminLoginPage when the button is pressed
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AdminLoginPage()),
+                );
+              },
+              child: Text(
+                'Login as Admin',
+                style: GoogleFonts.balooTamma2(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFFF4F9FD),
+                ),
+              ),
+            ),
+          ],
+        ),
         body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'FoodieFinder',
-                  style: TextStyle(
-                    fontSize: 36,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                if (errorMessage != null)
-                  Text(
-                    errorMessage!,
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                  ),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: _passwordController,
-                  obscureText: !_passwordVisible,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _passwordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
+          child: Container(
+            height: double.infinity, // Ensures the container fills the screen
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFFE989BE), Color(0xFFEDFFC3)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'FoodieFinder',
+                      style: GoogleFonts.pacifico(
+                        fontSize: 36,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFFF4F9FD),
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _passwordVisible = !_passwordVisible;
-                        });
-                      },
                     ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: _signIn,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                  ),
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                OutlinedButton.icon(
-                  onPressed: () {
-                    // Add Google Login logic here
-                  },
-                  icon: const FaIcon(FontAwesomeIcons.google, size: 20),
-                  label: const Text(
-                    'Login with Google',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                RichText(
-                  text: TextSpan(
-                    text: "Don't have an account? ",
-                    style: TextStyle(color: Colors.grey[600], fontSize: 14),
-                    children: [
-                      TextSpan(
-                        text: 'Sign Up here',
-                        style: const TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
+                    const SizedBox(height: 20),
+                    if (errorMessage != null)
+                      Text(
+                        errorMessage!,
+                        style: GoogleFonts.balooTamma2(
+                          fontSize: 14,
+                          color: Colors.red,
                         ),
-                        recognizer: TapGestureRecognizer()
-                          // ..onTap = () {
-                          //   Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //       builder: (context) => SignupScreen(),
-                          //     ),
-                          //   );
-                          // },
                       ),
-                    ],
-                  ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        labelStyle: GoogleFonts.balooTamma2(
+                          color: const Color(0xFFE989BE),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _passwordController,
+                      obscureText: !_passwordVisible,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        labelStyle: GoogleFonts.balooTamma2(
+                          color: const Color(0xFFE989BE),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _passwordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: const Color(0xFFE989BE),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _passwordVisible = !_passwordVisible;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: _signIn,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFE989BE),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: Text(
+                        'Login',
+                        style: GoogleFonts.balooTamma2(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    OutlinedButton.icon(
+                      onPressed: () {
+                        // Add Google Login logic here
+                      },
+                      icon: const FaIcon(
+                        FontAwesomeIcons.google,
+                        size: 20,
+                        color: Color(0xFFE989BE),
+                      ),
+                      label: Text(
+                        'Login with Google',
+                        style: GoogleFonts.balooTamma2(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFFF4F9FD),
+                        ),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    RichText(
+                      text: TextSpan(
+                        text: "Don't have an account? ",
+                        style: GoogleFonts.balooTamma2(
+                          color: Colors.grey[600],
+                          fontSize: 14,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: 'Sign Up here',
+                            style: GoogleFonts.balooTamma2(
+                              color: const Color(0xFFE989BE),
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                // Add navigation to sign-up page logic
+                              },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

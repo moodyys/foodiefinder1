@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'login.dart';
+import 'CreateAccountWidget.dart';
+import 'login.dart'; // Import the CreateAccountWidget here
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({Key? key}) : super(key: key);
@@ -62,9 +63,12 @@ class WelcomePage extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     onPressed: () {
+                      // Navigate to CreateAccountWidget on button press
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => const LoginPage()),
+                        MaterialPageRoute(
+                          builder: (context) => CreateAccountWidget(),
+                        ),
                       );
                     },
                     style: ElevatedButton.styleFrom(

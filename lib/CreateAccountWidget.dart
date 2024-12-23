@@ -1,10 +1,35 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:foodiefinder1/Userhomepage.dart';
+import 'package:foodiefinder1/user_auth/signup_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'login.dart'; // Import LoginPage
 
-class CreateAccountWidget extends StatelessWidget {
+class CreateAccountWidget extends StatefulWidget {
   const CreateAccountWidget({Key? key}) : super(key: key);
+
+  @override
+  State<CreateAccountWidget> createState() => _CreateAccountWidgetState();
+}
+
+
+class _CreateAccountWidgetState extends State<CreateAccountWidget> {
+  final signup_auth _auth = signup_auth();
+  TextEditingController _fullnameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _fullnameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +71,9 @@ class CreateAccountWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   // Add form fields for account creation (e.g., Name, Email, Password)
+
                   TextField(
+                    controller: _fullnameController,
                     decoration: InputDecoration(
                       labelText: 'Name',
                       labelStyle: GoogleFonts.balooTamma2(
@@ -61,6 +88,7 @@ class CreateAccountWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   TextField(
+                    controller: _emailController,
                     decoration: InputDecoration(
                       labelText: 'Email',
                       labelStyle: GoogleFonts.balooTamma2(
@@ -75,6 +103,7 @@ class CreateAccountWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   TextField(
+                    controller: _passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
                       labelText: 'Password',
@@ -90,12 +119,13 @@ class CreateAccountWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () {_signUp();
                       // Navigate to LoginPage when "Create Account" is pressed
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => const LoginPage()),
-                      );
+                      // Navigator.pushReplacement(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => const LoginPage()),
+                      // );
+
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFE989BE),
@@ -148,5 +178,18 @@ class CreateAccountWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+  void _signUp() async{
+     String fullname = _fullnameController.text;
+     String email = _emailController.text;
+     String password = _passwordController.text;
+
+     User? user = await _auth.signUpWithEmailAndPassword(email, password);
+
+     if (user != null){
+       print("User is successfully created");
+       Navigator.pushNamed(context,"/userHomepage");
+     }
+     else{print("Some error Occured");}
   }
 }

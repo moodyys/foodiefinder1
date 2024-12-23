@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'login.dart';
-import 'package:animations/animations.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({Key? key}) : super(key: key);
@@ -9,7 +9,7 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF4F9FD),
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -19,7 +19,7 @@ class WelcomePage extends StatelessWidget {
                 width: double.infinity,
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Colors.orange, Colors.redAccent],
+                    colors: [Color(0xFFE989BE), Color(0xFFEDFFC3)],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -29,7 +29,7 @@ class WelcomePage extends StatelessWidget {
                   children: [
                     Text(
                       "Welcome to FoodieFinder",
-                      style: TextStyle(
+                      style: GoogleFonts.pacifico(
                         fontSize: 36,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -37,7 +37,6 @@ class WelcomePage extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 16),
-                    // Add the Lottie Animation below the text
                     Lottie.asset(
                       'assets/Welcome_animation.json',
                       width: 150,
@@ -47,7 +46,7 @@ class WelcomePage extends StatelessWidget {
                     const SizedBox(height: 16),
                     Text(
                       "Discover your next favorite restaurant\nand share your experiences.",
-                      style: TextStyle(
+                      style: GoogleFonts.balooTamma2(
                         fontSize: 16,
                         color: Colors.white70,
                       ),
@@ -70,14 +69,18 @@ class WelcomePage extends StatelessWidget {
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      backgroundColor: Colors.redAccent,
+                      backgroundColor: const Color(0xFFE989BE),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Get Started',
-                      style: TextStyle(fontSize: 18),
+                      style: GoogleFonts.balooTamma2(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -88,11 +91,12 @@ class WelcomePage extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => const LoginPage()),
                       );
                     },
-                    child: const Text(
+                    child: Text(
                       "Already have an account? Log in",
-                      style: TextStyle(
-                        color: Colors.redAccent,
+                      style: GoogleFonts.balooTamma2(
+                        color: const Color(0xFFE989BE),
                         fontSize: 16,
+                        fontWeight: FontWeight.bold,
                         decoration: TextDecoration.underline,
                       ),
                     ),

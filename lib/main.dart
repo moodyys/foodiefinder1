@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-//import 'ManagerestaurantsWidget.dart'; // Import ManagerestaurantsWidget
-import 'Settings02Widget.dart'; // Import Settings02Widget
-import 'AnalyticsWidget.dart'; // Import AnalyticsWidget
+import 'package:firebase_core/firebase_core.dart';
+import 'WelcomePage.dart'; // Import WelcomePage
 import 'login.dart';
 import 'AdminDashBoard.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:foodiefinder1/Userhomepage.dart';
 import 'UsersWidget.dart'; // Import UsersWidget
 import 'FlaggedreviewsWidget.dart'; // Import FlaggedreviewsWidget
+import 'Settings02Widget.dart'; // Import Settings02Widget
+import 'AnalyticsWidget.dart'; // Import AnalyticsWidget
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,14 +40,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Userhomepage(), // Set Userhomepage as the initial screen
+      home: const WelcomePage(), // Set WelcomePage as the initial screen
       routes: {
+        '/userHomepage': (context) => const Userhomepage(), // Route for Userhomepage
         '/adminDashboard': (context) => const AdminDashBoard(),
         '/analytics': (context) => const AnalyticsWidget(),
         '/settings': (context) => const Settings02Widget(),
-        '/manageUsers': (context) => const UsersWidget(), // Added UsersWidget route
-        '/flaggedReviews': (context) => const FlaggedreviewsWidget(), // Added FlaggedreviewsWidget route
-        //'/manageRestaurants': (context) => const ManagerestaurantsWidget(), // Added ManagerestaurantsWidget route
+        '/manageUsers': (context) => const UsersWidget(),
+        '/flaggedReviews': (context) => const FlaggedreviewsWidget(),
       },
     );
   }

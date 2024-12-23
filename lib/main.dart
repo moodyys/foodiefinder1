@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-//import 'ManagerestaurantsWidget.dart'; // Import ManagerestaurantsWidget
-import 'Settings02Widget.dart'; // Import Settings02Widget
-import 'AnalyticsWidget.dart'; // Import AnalyticsWidget
-import 'login.dart';
-import 'AdminDashBoard.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:foodiefinder1/Userhomepage.dart';
-import 'UsersWidget.dart'; // Import UsersWidget
-import 'FlaggedreviewsWidget.dart'; // Import FlaggedreviewsWidget
+import 'WelcomePage.dart';
+import 'AdminDashBoard.dart';
+import 'Settings02Widget.dart';
+import 'AnalyticsWidget.dart';
+import 'UsersWidget.dart';
+import 'FlaggedreviewsWidget.dart';
+import 'login.dart';
+import 'Userhomepage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +27,7 @@ void main() async {
     );
   }
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -36,18 +36,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Admin Dashboard',
+      title: 'FoodieFinder',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.red,
       ),
-      home: const Userhomepage(), // Set Userhomepage as the initial screen
+      home: const WelcomePage(), // Updated initial screen
       routes: {
         '/adminDashboard': (context) => const AdminDashBoard(),
         '/analytics': (context) => const AnalyticsWidget(),
         '/settings': (context) => const Settings02Widget(),
-        '/manageUsers': (context) => const UsersWidget(), // Added UsersWidget route
-        '/flaggedReviews': (context) => const FlaggedreviewsWidget(), // Added FlaggedreviewsWidget route
-        //'/manageRestaurants': (context) => const ManagerestaurantsWidget(), // Added ManagerestaurantsWidget route
+        '/manageUsers': (context) => const UsersWidget(),
+        '/flaggedReviews': (context) => const FlaggedreviewsWidget(),
+        '/login': (context) => const LoginPage(),
+        '/userHome': (context) => const Userhomepage(),
       },
     );
   }

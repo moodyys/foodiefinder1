@@ -39,6 +39,14 @@ android {
         }
     }
 }
+repositories {
+    maven(url = "<https://jitpack.io>")
+}
+
+dependencies {
+    implementation("com.github.LottieFiles:dotlottie-android:0.0.3")
+}
+
 
 flutter {
     source = "../.."

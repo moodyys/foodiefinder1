@@ -12,6 +12,46 @@ class ManagerestaurantsWidget extends StatefulWidget {
 class _ManagerestaurantsWidgetState extends State<ManagerestaurantsWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  // List to hold restaurant names
+  List<String> restaurantNames = [];
+
+  // Function to show dialog for adding a restaurant
+  void _showAddRestaurantDialog() {
+    final TextEditingController nameController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Add New Restaurant'),
+        content: TextField(
+          controller: nameController,
+          decoration: InputDecoration(
+            hintText: 'Enter restaurant name',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Close the dialog
+            },
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              if (nameController.text.trim().isNotEmpty) {
+                setState(() {
+                  restaurantNames.add(nameController.text.trim());
+                });
+                Navigator.pop(context); // Close the dialog
+              }
+            },
+            child: Text('Add'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -41,9 +81,7 @@ class _ManagerestaurantsWidgetState extends State<ManagerestaurantsWidget> {
                   color: Colors.grey,
                   size: 30,
                 ),
-                onPressed: () {
-                  print('Add restaurant button pressed');
-                },
+                onPressed: _showAddRestaurantDialog,
               ),
             ),
           ],
@@ -56,26 +94,13 @@ class _ManagerestaurantsWidgetState extends State<ManagerestaurantsWidget> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 3,
-                        color: Color(0x33000000),
-                        offset: Offset(0, 1),
-                      ),
-                    ],
-                  ),
-                ),
                 Padding(
                   padding: EdgeInsets.only(top: 1),
                   child: ListView.builder(
                     padding: EdgeInsets.zero,
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: 5, // Replace with dynamic count if needed
+                    itemCount: restaurantNames.length,
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: EdgeInsets.only(bottom: 1),
@@ -110,7 +135,7 @@ class _ManagerestaurantsWidgetState extends State<ManagerestaurantsWidget> {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(44),
                                     child: Image.network(
-                                      'https://picsum.photos/seed/183/600',
+                                      'https://picsum.photos/seed/${index + 1}/600',
                                       width: 44,
                                       height: 44,
                                       fit: BoxFit.cover,
@@ -125,7 +150,7 @@ class _ManagerestaurantsWidgetState extends State<ManagerestaurantsWidget> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'Restaurant Name',
+                                          restaurantNames[index],
                                           style: GoogleFonts.inter(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500,
@@ -142,7 +167,9 @@ class _ManagerestaurantsWidgetState extends State<ManagerestaurantsWidget> {
                                     size: 24,
                                   ),
                                   onPressed: () {
-                                    print('Delete button pressed');
+                                    setState(() {
+                                      restaurantNames.removeAt(index);
+                                    });
                                   },
                                 ),
                               ],

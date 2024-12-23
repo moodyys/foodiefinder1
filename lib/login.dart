@@ -237,7 +237,7 @@ class _LoginPageState extends State<LoginPage> {
                               decoration: TextDecoration.underline,
                             ),
                             recognizer: TapGestureRecognizer()
-                              ..onTap = () {
+                              ..onTap = () {Navigator.pushNamed(context,'/createAccount');
                                 // Add navigation to sign-up page logic
                               },
                           ),

@@ -4,9 +4,21 @@ import 'favorites.dart';
 import 'ManageMyReviews.dart';
 import 'editprofile.dart';
 import 'termsofservices.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class myaccount extends StatelessWidget {
-  const myaccount({Key? key}) : super(key: key);
+   myaccount({Key? key}) : super(key: key);
+
+  final User? currentuser = FirebaseAuth.instance.currentUser;
+
+  Future<DocumentSnapshot<Map<String, dynamic>>> getUserDetails() async {
+    return await FirebaseFirestore.instance
+        .collection("users")
+        .doc(currentuser!.email)
+        .get();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +51,34 @@ class myaccount extends StatelessWidget {
           ),
         ),
       ),
-      body: Container(
+      body:
+    FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+    future: getUserDetails(),
+    builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+    return const Center(
+    child: CircularProgressIndicator(),
+    );
+    }
+
+    if (snapshot.hasError) {
+    return const Center(
+    child: Text('An error occurred!'),
+    );
+    }
+
+    if (!snapshot.hasData || snapshot.data!.data() == null) {
+    return const Center(
+    child: Text('No user data found!'),
+    );
+    }
+
+    // Extract user data
+    final user = snapshot.data!.data()!;
+    final email = user!['useremail'];
+    final username=user['username'];
+
+     return Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [Color(0xFFF4F9FD), Color(0xFFE1EAF5)],
@@ -80,7 +119,7 @@ class myaccount extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'User Name',
+                      username,
                       style: GoogleFonts.balooTamma2(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -89,7 +128,7 @@ class myaccount extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'useremail@example.com',
+                      email,
                       style: GoogleFonts.balooTamma2(
                         fontSize: 16,
                         color: const Color(0xFF888888),
@@ -181,10 +220,11 @@ class myaccount extends StatelessWidget {
             ],
           ),
         ),
-      ),
+      );
+    },
+    ),
     );
   }
-
   // Helper method to build account options
   Widget _buildOptionTile(BuildContext context,
       {required String title, required IconData icon, required VoidCallback onTap}) {

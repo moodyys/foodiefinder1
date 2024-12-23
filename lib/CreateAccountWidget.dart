@@ -197,7 +197,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
      else{print("Some error Occured");}
   }
 Future<void> createUserDocument(User? user) async{
-    await FirebaseFirestore.instance.collection("users").doc(user!.email).set({'useremail': user!.email,'username': _fullnameController.text,'userpassword': _passwordController.text});
+    await FirebaseFirestore.instance.collection("users").doc(user!.email).set({'useremail': user.email,'username': _fullnameController.text,'userpassword': _passwordController.text});
 
 
 

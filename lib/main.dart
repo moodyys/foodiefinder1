@@ -10,6 +10,7 @@ import 'FlaggedreviewsWidget.dart'; // Import FlaggedreviewsWidget
 import 'Settings02Widget.dart'; // Import Settings02Widget
 import 'AnalyticsWidget.dart'; // Import AnalyticsWidget
 import 'CreateAccountWidget.dart'; // Import CreateAccountWidget
+import 'myreviews.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,14 +45,16 @@ class MyApp extends StatelessWidget {
       ),
       home: const WelcomePage(), // Set WelcomePage as the initial screen
       routes: {
-        '/userHomepage': (context) => const Userhomepage(), // Route for Userhomepage
+        '/userHomepage': (context) =>  Userhomepage(), // Route for Userhomepage
         '/adminDashboard': (context) => const AdminDashBoard(),
         '/adminLogin': (context) => const AdminLoginPage(), // Add route for AdminLoginPage
         '/analytics': (context) => const AnalyticsWidget(),
         '/settings': (context) => const Settings02Widget(),
         '/manageUsers': (context) => const UsersWidget(),
         '/flaggedReviews': (context) => const FlaggedreviewsWidget(),
-        '/createAccount': (context) => CreateAccountWidget(), // Add route for CreateAccountWidget
+        '/createAccount': (context) => CreateAccountWidget(),
+        '/myreviews': (context) => const MyReviews(),
+        // Add route for CreateAccountWidget
       },
     );
   }

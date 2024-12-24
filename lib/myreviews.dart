@@ -1,15 +1,63 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'myaccount.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:foodiefinder1/Databases/Firestore.dart'; // Ensure Firestore is imported
 
-class myreviews extends StatefulWidget {
-  const myreviews({Key? key}) : super(key: key);
+class MyReviews extends StatefulWidget {
+  const MyReviews({Key? key}) : super(key: key);
 
   @override
-  State<myreviews> createState() => _MyReviewsState();
+  _MyReviewsState createState() => _MyReviewsState();
 }
 
-class _MyReviewsState extends State<myreviews> {
+class _MyReviewsState extends State<MyReviews> {
+  final FirestoreDatabase database = FirestoreDatabase();
+  User? currentUser = FirebaseAuth.instance.currentUser;
+
+  bool hasLiked(List<dynamic> likes) {
+    return likes.contains(currentUser!.email);
+  }
+
+  void _editReview(String reviewID, String currentText) async {
+    TextEditingController _controller = TextEditingController(text: currentText);
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Edit Review'),
+        content: TextField(
+          controller: _controller,
+          maxLines: 4,
+          decoration: InputDecoration(hintText: 'Edit your review here'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              String updatedText = _controller.text.trim();
+              if (updatedText.isNotEmpty) {
+                database.editReview(reviewID, updatedText);
+                Navigator.pop(context);
+              }
+            },
+            child: Text('Save'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Delete review function
+  void _deleteReview(String reviewID) async {
+    await database.deleteReview(reviewID);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +75,7 @@ class _MyReviewsState extends State<myreviews> {
             style: GoogleFonts.pacifico(
               fontSize: 26,
               fontWeight: FontWeight.bold,
-              color: Colors.white, // Placeholder for the gradient
+              color: Colors.white,
             ),
           ),
         ),
@@ -47,7 +95,7 @@ class _MyReviewsState extends State<myreviews> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const myaccount(),
+                  builder: (context) => myaccount(),
                 ),
               );
             },
@@ -62,140 +110,143 @@ class _MyReviewsState extends State<myreviews> {
             end: Alignment.bottomCenter,
           ),
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-                child: Text(
-                  'Your Reviews',
-                  style: GoogleFonts.balooTamma2(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF333333),
-                  ),
-                ),
-              ),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: 3,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 8,
-                            offset: const Offset(0, 4),
+        child: StreamBuilder<QuerySnapshot>(
+          stream: database.getReviewsStreamfromAccount(), // Reference to the Firestore stream
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+
+            if (snapshot.hasError) {
+              return Center(child: Text('Error loading reviews'));
+            }
+
+            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+              return Center(child: Text('No reviews available'));
+            }
+
+            var reviews = snapshot.data!.docs;
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: reviews.length,
+              itemBuilder: (context, index) {
+                var review = reviews[index];
+                bool liked = hasLiked(review['likes']);
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    review['useremail'],
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFF222222),
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    review['timestamp'].toDate().toString(),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Color(0xFF888888),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              PopupMenuButton<String>(
+                                icon: Icon(Icons.more_vert, color: Color(0xFF888888)),
+                                onSelected: (value) {
+                                  if (value == 'edit') {
+                                    _editReview(review.id, review['reviewText']);
+                                  } else if (value == 'delete') {
+                                    _deleteReview(review.id);
+                                  }
+                                },
+                                itemBuilder: (BuildContext context) {
+                                  return [
+                                    PopupMenuItem<String>(
+                                      value: 'edit',
+                                      child: Text('Edit'),
+                                    ),
+                                    PopupMenuItem<String>(
+                                      value: 'delete',
+                                      child: Text('Delete'),
+                                    ),
+                                  ];
+                                },
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 12),
+                          Text(
+                            review['reviewText'],
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Color(0xFF444444),
+                            ),
+                          ),
+                          SizedBox(height: 16),
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: Icon(
+                                  liked ? Icons.thumb_up_alt : Icons.thumb_up_alt_outlined,
+                                  color: liked ? Colors.blue : Color(0xFF0072FF),
+                                ),
+                                onPressed: () {
+                                  if (liked) {
+                                    database.unlikeReview(review.id);
+                                  } else {
+                                    database.likeReview(review.id);
+                                  }
+                                  setState(() {});
+                                },
+                              ),
+                              SizedBox(width: 4),
+                              Text(
+                                '${review['likes'].length} likes',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF444444),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'username',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xFF222222),
-                                      ),
-                                    ),
-                                    SizedBox(height: 4),
-                                    Text(
-                                      'time posted',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0xFF888888),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.more_vert,
-                                    color: Color(0xFF888888),
-                                  ),
-                                  onPressed: () {
-                                    print('Options pressed');
-                                  },
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            const Text(
-                              '(post written)',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Color(0xFF444444),
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              children: [
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.thumb_up_alt_outlined,
-                                    color: Color(0xFF0072FF),
-                                  ),
-                                  onPressed: () {
-                                    print('Like button pressed');
-                                  },
-                                ),
-                                const SizedBox(width: 4),
-                                const Text(
-                                  '42 likes',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFF444444),
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.chat_bubble_outline,
-                                    color: Color(0xFF888888),
-                                  ),
-                                  onPressed: () {
-                                    print('Comment button pressed');
-                                  },
-                                ),
-                                const Text(
-                                  '15 comments',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFF444444),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
                     ),
-                  );
-                },
-              ),
-            ],
-          ),
+                  ),
+                );
+              },
+            );
+          },
         ),
       ),
     );
   }
 }
+

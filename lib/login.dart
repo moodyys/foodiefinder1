@@ -36,9 +36,9 @@ class _LoginPageState extends State<LoginPage> {
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
-      Navigator.pushReplacement(
+      Navigator.pushNamed(
         context,
-        MaterialPageRoute(builder: (context) => const Userhomepage()),
+          '/userHomepage'
       );
     } on FirebaseAuthException catch (e) {
       setState(() {

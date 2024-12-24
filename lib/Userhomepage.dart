@@ -1,10 +1,30 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:foodiefinder1/Databases/Firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'myreviews.dart';
 import 'restaurants.dart';
+import 'components//TextField.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class Userhomepage extends StatelessWidget {
-  const Userhomepage({super.key});
+class Userhomepage extends StatefulWidget {
+  Userhomepage({super.key});
+
+  @override
+  _UserhomepageState createState() => _UserhomepageState();
+}
+
+class _UserhomepageState extends State<Userhomepage> {
+  final TextEditingController newReviewController = TextEditingController();
+  final FirestoreDatabase database = FirestoreDatabase();
+
+  void postReview() {
+    if (newReviewController.text.isNotEmpty) {
+      String reviewText = newReviewController.text;
+      database.addReview(reviewText);
+    }
+    newReviewController.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,103 +83,185 @@ class Userhomepage extends StatelessWidget {
                   ),
                 ),
               ),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: 4,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 8,
-                            offset: const Offset(0, 4),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+                child: Row(
+                  children: [
+                    // Expanded widget for the text field
+                    Expanded(
+                      child: TextField(
+                        controller: newReviewController,
+                        minLines: 1, // Initial height
+                        maxLines: null, // Expands as needed
+                        decoration: InputDecoration(
+                          hintText: "Share with your fellow foodie finders",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(color: Colors.grey),
                           ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                const Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'username',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color(0xFF222222),
-                                        ),
-                                      ),
-                                      SizedBox(height: 4),
-                                      Text(
-                                        'time posted',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Color(0xFF888888),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.more_vert,
-                                    color: Colors.grey,
-                                  ),
-                                  onPressed: () {
-                                    print('Options pressed');
-                                  },
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            const Text(
-                              '(post written)',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Color(0xFF444444),
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              children: [
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.thumb_up_alt_outlined,
-                                    color: Color(0xFF0072FF),
-                                  ),
-                                  onPressed: () {
-                                    print('Like button pressed');
-                                  },
-                                ),
-                                const SizedBox(width: 4),
-                                const Text(
-                                  '3 likes',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFF444444),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(color: Color(0xFFE989BE)),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 12.0, horizontal: 16.0),
                         ),
                       ),
                     ),
+                    const SizedBox(width: 10), // Space between the text field and button
+                    // Post button with only an icon
+                    ElevatedButton(
+                      onPressed: () { postReview(); },
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(16),
+                        backgroundColor: const Color(0xFFE989BE), // Button color
+                        shape: const CircleBorder(), // Circular button shape
+                      ),
+                      child: const Icon(
+                        Icons.send, // Icon for the post button
+                        size: 24,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // StreamBuilder to display reviews and likes in real-time
+              StreamBuilder<QuerySnapshot>(
+                stream: database.getReviewsStream(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error loading reviews'));
+                  }
+
+                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return Center(child: Text('No reviews available.'));
+                  }
+
+                  // If data is available, display reviews
+                  final reviews = snapshot.data!.docs;
+
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: reviews.length,
+                    itemBuilder: (context, index) {
+                      var review = reviews[index];
+                      String reviewText = review['reviewText'];
+                      String username = review['useremail'];  // Assuming useremail is used as username
+                      int likesCount = (review['likes'] as List).length;
+                      Timestamp timestamp = review['timestamp'];
+                      String reviewID = review.id;
+
+                      // Check if the user has liked this review
+                      bool hasLiked = (review['likes'] as List).contains(FirebaseAuth.instance.currentUser!.email);
+
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 8,
+                                offset: Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            username,  // Display the username/email
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xFF222222),
+                                            ),
+                                          ),
+                                          SizedBox(height: 4),
+                                          Text(
+                                            timestamp.toDate().toString(),
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Color(0xFF888888),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.more_vert,
+                                        color: Colors.grey,
+                                      ),
+                                      onPressed: () {
+                                        // Handle options click
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 12),
+                                Text(
+                                  reviewText,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Color(0xFF444444),
+                                  ),
+                                ),
+                                SizedBox(height: 16),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(
+                                        hasLiked
+                                            ? Icons.thumb_up_alt // Filled blue icon if liked
+                                            : Icons.thumb_up_alt_outlined, // Outline if not liked
+                                        color: hasLiked ? Color(0xFF0072FF) : Colors.grey,
+                                      ),
+                                      onPressed: () async {
+                                        if (hasLiked) {
+                                          // If already liked, unlike it
+                                          await database.unlikeReview(reviewID);
+                                        } else {
+                                          // If not liked, like it
+                                          await database.likeReview(reviewID);
+                                        }
+                                        setState(() {}); // Refresh UI to reflect the changes
+                                      },
+                                    ),
+                                    SizedBox(width: 4),
+                                    Text(
+                                      '$likesCount likes',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xFF444444),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
               ),
@@ -187,15 +289,9 @@ class Userhomepage extends StatelessWidget {
         ],
         onTap: (index) {
           if (index == 0) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const Userhomepage()),
-            );
+            Navigator.pushNamed(context, '/userHomePage');
           } else if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const myreviews()),
-            );
+            Navigator.pushNamed(context,'/myreviews');
           } else if (index == 2) {
             Navigator.push(
               context,

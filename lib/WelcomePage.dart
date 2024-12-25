@@ -81,7 +81,7 @@ class WelcomePage extends StatelessWidget {
                     child: Text(
                       'Get Started',
                       style: GoogleFonts.balooTamma2(
-                        fontSize: 18,
+                        fontSize: 12,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),

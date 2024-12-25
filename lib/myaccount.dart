@@ -149,8 +149,8 @@ class myaccount extends StatelessWidget {
               // Account Options
               _buildOptionTile(
                 context,
-                title: 'Edit Profile',
-                icon: Icons.account_circle_outlined,
+                title: 'Profile Settings',
+                icon: Icons.settings,
                 onTap: () {
                   Navigator.push(
                     context,

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'myaccount.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:foodiefinder1/Databases/Firestore.dart'; // Ensure Firestore is imported
+import 'package:foodiefinder1/Databases/Firestore.dart';
 
 class MyReviews extends StatefulWidget {
   const MyReviews({Key? key}) : super(key: key);
@@ -18,44 +18,6 @@ class _MyReviewsState extends State<MyReviews> {
 
   bool hasLiked(List<dynamic> likes) {
     return likes.contains(currentUser!.email);
-  }
-
-  void _editReview(String reviewID, String currentText) async {
-    TextEditingController _controller = TextEditingController(text: currentText);
-    await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Edit Review'),
-        content: TextField(
-          controller: _controller,
-          maxLines: 4,
-          decoration: InputDecoration(hintText: 'Edit your review here'),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              String updatedText = _controller.text.trim();
-              if (updatedText.isNotEmpty) {
-                database.editReview(reviewID, updatedText);
-                Navigator.pop(context);
-              }
-            },
-            child: Text('Save'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text('Cancel'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Delete review function
-  void _deleteReview(String reviewID) async {
-    await database.deleteReview(reviewID);
   }
 
   @override
@@ -111,18 +73,18 @@ class _MyReviewsState extends State<MyReviews> {
           ),
         ),
         child: StreamBuilder<QuerySnapshot>(
-          stream: database.getReviewsStreamfromAccount(), // Reference to the Firestore stream
+          stream: database.getReviewsStreamfromAccount(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }
 
             if (snapshot.hasError) {
-              return Center(child: Text('Error loading reviews'));
+              return const Center(child: Text('Error loading reviews'));
             }
 
             if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-              return Center(child: Text('No reviews available'));
+              return const Center(child: Text('No reviews available'));
             }
 
             var reviews = snapshot.data!.docs;
@@ -152,69 +114,37 @@ class _MyReviewsState extends State<MyReviews> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    review['useremail'],
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(0xFF222222),
-                                    ),
-                                  ),
-                                  SizedBox(height: 4),
-                                  Text(
-                                    review['timestamp'].toDate().toString(),
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Color(0xFF888888),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              PopupMenuButton<String>(
-                                icon: Icon(Icons.more_vert, color: Color(0xFF888888)),
-                                onSelected: (value) {
-                                  if (value == 'edit') {
-                                    _editReview(review.id, review['reviewText']);
-                                  } else if (value == 'delete') {
-                                    _deleteReview(review.id);
-                                  }
-                                },
-                                itemBuilder: (BuildContext context) {
-                                  return [
-                                    PopupMenuItem<String>(
-                                      value: 'edit',
-                                      child: Text('Edit'),
-                                    ),
-                                    PopupMenuItem<String>(
-                                      value: 'delete',
-                                      child: Text('Delete'),
-                                    ),
-                                  ];
-                                },
-                              ),
-                            ],
+                          Text(
+                            review['useremail'],
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF222222),
+                            ),
                           ),
-                          SizedBox(height: 12),
+                          const SizedBox(height: 4),
+                          Text(
+                            review['timestamp'].toDate().toString(),
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Color(0xFF888888),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
                           Text(
                             review['reviewText'],
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               color: Color(0xFF444444),
                             ),
                           ),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           Row(
                             children: [
                               IconButton(
                                 icon: Icon(
                                   liked ? Icons.thumb_up_alt : Icons.thumb_up_alt_outlined,
-                                  color: liked ? Colors.blue : Color(0xFF0072FF),
+                                  color: liked ? Colors.blue : const Color(0xFF0072FF),
                                 ),
                                 onPressed: () {
                                   if (liked) {
@@ -225,10 +155,10 @@ class _MyReviewsState extends State<MyReviews> {
                                   setState(() {});
                                 },
                               ),
-                              SizedBox(width: 4),
+                              const SizedBox(width: 4),
                               Text(
                                 '${review['likes'].length} likes',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                   color: Color(0xFF444444),
@@ -249,4 +179,3 @@ class _MyReviewsState extends State<MyReviews> {
     );
   }
 }
-

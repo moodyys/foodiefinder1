@@ -2,11 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:foodiefinder1/Userhomepage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'WelcomePage.dart';
 import 'AdminLogin.dart'; // Import AdminLoginPage here
-import 'AdminDashBoard.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -36,10 +34,7 @@ class _LoginPageState extends State<LoginPage> {
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
-      Navigator.pushNamed(
-        context,
-          '/userHomepage'
-      );
+      Navigator.pushNamed(context, '/userHomepage');
     } on FirebaseAuthException catch (e) {
       setState(() {
         if (e.code == 'user-not-found') {
@@ -59,29 +54,37 @@ class _LoginPageState extends State<LoginPage> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: const Color(0xFFE989BE),
+          elevation: 5,
+          centerTitle: true,
+          title: Text(
+            'Login',
+            style: GoogleFonts.pacifico(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFFE989BE), Color(0xFFEDFFC3)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+          ),
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
-              // Navigate back to the WelcomePage when back button is pressed
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => const WelcomePage()),
               );
             },
           ),
-          title: Text(
-            'Login',
-            style: GoogleFonts.balooTamma2(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFFF4F9FD),
-            ),
-          ),
           actions: [
             TextButton(
               onPressed: () {
-                // Navigate to AdminLoginPage when the button is pressed
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => const AdminLoginPage()),
@@ -92,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                 style: GoogleFonts.balooTamma2(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFFF4F9FD),
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -100,14 +103,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         body: SafeArea(
           child: Container(
-            height: double.infinity, // Ensures the container fills the screen
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xFFE989BE), Color(0xFFEDFFC3)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
+            color: Colors.white, // White background
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -119,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                       style: GoogleFonts.pacifico(
                         fontSize: 36,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFFF4F9FD),
+                        color: const Color(0xFFE989BE),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -210,7 +206,7 @@ class _LoginPageState extends State<LoginPage> {
                         style: GoogleFonts.balooTamma2(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFFF4F9FD),
+                          color: const Color(0xFF15161E),
                         ),
                       ),
                       style: OutlinedButton.styleFrom(
@@ -237,8 +233,8 @@ class _LoginPageState extends State<LoginPage> {
                               decoration: TextDecoration.underline,
                             ),
                             recognizer: TapGestureRecognizer()
-                              ..onTap = () {Navigator.pushNamed(context,'/createAccount');
-                                // Add navigation to sign-up page logic
+                              ..onTap = () {
+                                Navigator.pushNamed(context, '/createAccount');
                               },
                           ),
                         ],

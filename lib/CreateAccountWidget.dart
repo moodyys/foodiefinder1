@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:foodiefinder1/Userhomepage.dart';
 import 'package:foodiefinder1/user_auth/signup_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'login.dart'; // Import LoginPage
@@ -15,48 +13,71 @@ class CreateAccountWidget extends StatefulWidget {
   State<CreateAccountWidget> createState() => _CreateAccountWidgetState();
 }
 
-
 class _CreateAccountWidgetState extends State<CreateAccountWidget> {
   final signup_auth _auth = signup_auth();
-  TextEditingController _fullnameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _fullnameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _fullnameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
-
     super.dispose();
   }
 
+  void _signUp() async {
+    String fullname = _fullnameController.text;
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    User? user = await _auth.signUpWithEmailAndPassword(email, password);
+
+    if (user != null) {
+      print("User is successfully created");
+      await createUserDocument(user);
+      Navigator.pushNamed(context, "/userHomepage");
+    } else {
+      print("Some error occurred");
+    }
+  }
+
+  Future<void> createUserDocument(User? user) async {
+    await FirebaseFirestore.instance.collection("users").doc(user!.email).set({
+      'useremail': user.email,
+      'username': _fullnameController.text,
+      'userpassword': _passwordController.text
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFFE989BE),
+        elevation: 5,
+        centerTitle: true,
         title: Text(
           'Create Account',
-          style: GoogleFonts.balooTamma2(
-            fontSize: 24,
+          style: GoogleFonts.pacifico(
+            fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: const Color(0xFFF4F9FD),
+            color: Colors.white,
           ),
         ),
-      ),
-      body: SafeArea(
-        child: Container(
-          height: double.infinity,
-          decoration: BoxDecoration(
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [Color(0xFFE989BE), Color(0xFFEDFFC3)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
           ),
+        ),
+      ),
+      body: SafeArea(
+        child: Container(
+          color: Colors.white, // White background
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -68,12 +89,10 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                     style: GoogleFonts.pacifico(
                       fontSize: 36,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFFF4F9FD),
+                      color: const Color(0xFFE989BE),
                     ),
                   ),
                   const SizedBox(height: 20),
-                  // Add form fields for account creation (e.g., Name, Email, Password)
-
                   TextField(
                     controller: _fullnameController,
                     decoration: InputDecoration(
@@ -121,14 +140,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () {_signUp();
-                      // Navigate to LoginPage when "Create Account" is pressed
-                      // Navigator.pushReplacement(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => const LoginPage()),
-                      // );
-
-                    },
+                    onPressed: _signUp,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFE989BE),
                       padding: const EdgeInsets.symmetric(vertical: 12),
@@ -139,7 +151,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                     child: Text(
                       'Create Account',
                       style: GoogleFonts.balooTamma2(
-                        fontSize: 16,
+                        fontSize: 12,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
@@ -163,10 +175,10 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              // Navigate to LoginPage when "Sign in here" is pressed
                               Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(builder: (context) => const LoginPage()),
+                                MaterialPageRoute(
+                                    builder: (context) => const LoginPage()),
                               );
                             },
                         ),
@@ -181,25 +193,4 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
       ),
     );
   }
-  void _signUp() async{
-     String fullname = _fullnameController.text;
-     String email = _emailController.text;
-     String password = _passwordController.text;
-
-     User? user = await _auth.signUpWithEmailAndPassword(email, password);
-
-     if (user != null){
-
-       print("User is successfully created");
-       createUserDocument(user);
-       Navigator.pushNamed(context,"/userHomepage");
-     }
-     else{print("Some error Occured");}
-  }
-Future<void> createUserDocument(User? user) async{
-    await FirebaseFirestore.instance.collection("users").doc(user!.email).set({'useremail': user.email,'username': _fullnameController.text,'userpassword': _passwordController.text});
-
-
-
-}
 }

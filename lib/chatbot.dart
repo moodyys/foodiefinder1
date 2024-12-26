@@ -1,164 +1,86 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 
-class chatbot extends StatefulWidget {
-  const chatbot({super.key});
+void main() => runApp(chatbot());
 
+class chatbot extends StatelessWidget {
   @override
-  State<chatbot> createState() => _ChatbotScreenState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: ChatScreen(),
+    );
+  }
 }
 
-class _ChatbotScreenState extends State<chatbot> {
-  final TextEditingController _textController = TextEditingController();
-
+class ChatScreen extends StatefulWidget {
   @override
-  void dispose() {
-    _textController.dispose();
-    super.dispose();
+  _ChatScreenState createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+  final TextEditingController _controller = TextEditingController();
+  String? _response;
+
+  Future<void> sendPrompt(String prompt) async {
+    final url = Uri.parse('https://8721-196-153-189-180.ngrok-free.app/api/ask');
+    final headers = {'Content-Type': 'application/json'};
+    final body = jsonEncode({"prompt": prompt});
+
+    try {
+      final response = await http.post(url, headers: headers, body: body);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        setState(() {
+          _response = data['response'];
+        });
+      } else {
+        setState(() {
+          _response = 'Error ${response.statusCode}: ${response.body}';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _response = 'Exception: $e\nMake sure the Ngrok URL is active and accessible.';
+      });
+      debugPrint('Error sending prompt: $e');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 5,
-          centerTitle: true,
-          title: ShaderMask(
-            shaderCallback: (bounds) => const LinearGradient(
-              colors: [Color(0xFFFFFFFF), Color(0xFFFFFFFF)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ).createShader(bounds),
-            child: Text(
-              'Your Food Buddy',
-              style: GoogleFonts.pacifico(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xFFE989BE), Color(0xFFEDFFC3)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-          ),
-        ),
-        body: Column(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Chat with Assistant'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
           children: [
-            Expanded(
-              child: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFFF4F9FD), Color(0xFFE1EAF5)],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                ),
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 16),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Text(
-                            'Hello! How can I assist you today?',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Color(0xFF333333),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 16),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFE989BE),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Text(
-                            'I need recommendations for a good Italian restaurant.',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+            TextField(
+              controller: _controller,
+              decoration: InputDecoration(
+                labelText: 'Enter your prompt',
+                border: OutlineInputBorder(),
               ),
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 4,
-                    offset: Offset(0, -2),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _textController,
-                      decoration: InputDecoration(
-                        hintText: 'Type a message...',
-                        hintStyle: const TextStyle(
-                          fontSize: 14,
-                          color: Color(0xFF606A85),
-                        ),
-                        filled: true,
-                        fillColor: const Color(0xFFF4F9FD),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(24),
-                          borderSide: BorderSide.none,
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 12,
-                          horizontal: 16,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE989BE),
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    child: IconButton(
-                      onPressed: () {
-                        // Handle message send
-                        print('Send button pressed');
-                      },
-                      icon: const Icon(Icons.send, color: Colors.white),
-                    ),
-                  ),
-                ],
+            SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                if (_controller.text.isNotEmpty) {
+                  sendPrompt(_controller.text);
+                }
+              },
+              child: Text('Send'),
+            ),
+            SizedBox(height: 20),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Text(
+                  _response ?? 'Response will appear here',
+                  style: TextStyle(fontSize: 16),
+                ),
               ),
             ),
           ],

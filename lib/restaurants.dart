@@ -203,7 +203,7 @@ class _RestaurantsPageState extends State<restaurants> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const chatbot()),
+                    MaterialPageRoute(builder: (context) =>  chatbot()),
                   );
                 },
                 backgroundColor: const Color(0xFFE989BE),

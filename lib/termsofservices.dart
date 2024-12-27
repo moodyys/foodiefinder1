@@ -89,7 +89,7 @@ class termsofservices extends StatelessWidget {
                       Navigator.pop(context);
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF00B4DB),
+                      backgroundColor: const Color(0xFFEFCFE1),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 40, vertical: 12),
                       shape: RoundedRectangleBorder(

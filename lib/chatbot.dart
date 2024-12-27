@@ -1,11 +1,10 @@
 import 'dart:convert';
-import 'restaurants.dart';
-import 'package:flutter/material.dart';
 import 'package:foodiefinder1/restaurants.dart';
+
+import 'Userhomepage.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-
-void main() => runApp(chatbot());
 
 class chatbot extends StatelessWidget {
   @override
@@ -66,23 +65,15 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const restaurants()),
-            );
-          },
-        ),
+        automaticallyImplyLeading: true,
         centerTitle: true,
         elevation: 5,
         title: Text(
           'Your Food Assistant',
-          style: GoogleFonts.pacifico(
+          style: GoogleFonts.lilyScriptOne(
             fontSize: 30,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: Colors.white70,
           ),
         ),
         flexibleSpace: Container(
@@ -161,7 +152,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
                 const SizedBox(width: 8.0),
                 CircleAvatar(
-                  backgroundColor: const Color(0xFFE989BE),
+                  backgroundColor: const Color(0xFFEFCFE1),
                   child: IconButton(
                     icon: const Icon(Icons.send, color: Colors.white),
                     onPressed: () {

@@ -44,10 +44,10 @@ class _MyReviewsState extends State<myreviews> {
           ).createShader(bounds),
           child: Text(
             'My Reviews',
-            style: GoogleFonts.pacifico(
+            style: GoogleFonts.lilyScriptOne(
               fontSize: 26,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: Colors.white70,
             ),
           ),
         ),
@@ -321,6 +321,9 @@ class _MyReviewsState extends State<myreviews> {
             );
           },
         ),
+
+
+
       ),
     );
   }

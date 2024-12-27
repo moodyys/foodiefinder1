@@ -29,10 +29,10 @@ class _ChangeusernamescreenState extends State<Changeusernamescreen> {
           centerTitle: true,
           title: Text(
             'Change Username',
-            style: GoogleFonts.pacifico(
+            style: GoogleFonts.lilyScriptOne(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: Colors.white70,
             ),
           ),
           flexibleSpace: Container(
@@ -130,10 +130,11 @@ class _ChangeusernamescreenState extends State<Changeusernamescreen> {
                       ),
                       child: Text(
                         'Change Username',
-                        style: GoogleFonts.lato(
+                        style: GoogleFonts.lilyScriptOne(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                          color: Colors.white70
+                          ,
                         ),
                       ),
                     ),

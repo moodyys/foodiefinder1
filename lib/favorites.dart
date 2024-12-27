@@ -25,10 +25,10 @@ class _FavoritesState extends State<favorites> {
             ).createShader(bounds),
             child: Text(
               'Favorites',
-              style: GoogleFonts.pacifico(
+              style: GoogleFonts.lilyScriptOne(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: Colors.white70,
               ),
             ),
           ),

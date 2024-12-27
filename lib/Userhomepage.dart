@@ -30,6 +30,7 @@ class _UserhomepageState extends State<Userhomepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         elevation: 5,
         centerTitle: true,
         title: ShaderMask(
@@ -40,10 +41,10 @@ class _UserhomepageState extends State<Userhomepage> {
           ).createShader(bounds),
           child: Text(
             'Foodie Finders',
-            style: GoogleFonts.pacifico(
+            style: GoogleFonts.lilyScriptOne(
               fontSize: 30,
               fontWeight: FontWeight.bold,
-              color: Colors.white, // Placeholder for the gradient.
+              color: Colors.white70, // Placeholder for the gradient.
             ),
           ),
         ),
@@ -76,39 +77,48 @@ class _UserhomepageState extends State<Userhomepage> {
                           horizontal: 16.0, vertical: 20.0),
                       child: Align(
                         alignment: Alignment.centerLeft,
-                        child: ShaderMask(
-                          shaderCallback: (bounds) => const LinearGradient(
-                            colors: [Color(0xFFE989BE), Color(0xFFEDFFC3)], // Gradient colors
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ).createShader(bounds),
-                          child: Text(
-                            'Fork and Feed',
-                            style: GoogleFonts.ole(
-                              fontSize: 50,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white, // Placeholder color
+                        child: Stack(
+                          children: [
+                            Text(
+                              'Fork and Feed',
+                              style: GoogleFonts.boogaloo(
+                                fontSize: 35,
+                                fontWeight: FontWeight.w600,
+                                foreground: Paint()
+                                  ..style = PaintingStyle.stroke
+                                  ..strokeWidth = 4
+                                  ..color = Colors.black,
+                              ),
                             ),
-                          ),
+
+                            Text(
+                              'Fork and Feed',
+                              style: GoogleFonts.boogaloo(
+                                fontSize: 35,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
 
-                    // StreamBuilder to display reviews and likes in real-time
+
                     StreamBuilder<QuerySnapshot>(
                       stream: database.getReviewsStream(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator());
+                          return const Center(child: CircularProgressIndicator());
                         }
 
                         if (snapshot.hasError) {
-                          return Center(child: Text('Error loading reviews'));
+                          return const Center(child: Text('Error loading reviews'));
                         }
 
                         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                          return Center(child: Text('No reviews available.'));
+                          return const Center(child: Text('No reviews available.'));
                         }
 
                         // If data is available, display reviews
@@ -142,7 +152,7 @@ class _UserhomepageState extends State<Userhomepage> {
                                     BoxShadow(
                                       color: Colors.black.withOpacity(0.1),
                                       blurRadius: 8,
-                                      offset: Offset(0, 4),
+                                      offset: const Offset(0, 4),
                                     ),
                                   ],
                                 ),
@@ -161,18 +171,18 @@ class _UserhomepageState extends State<Userhomepage> {
                                               children: [
                                                 Text(
                                                   username,
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     fontSize: 18,
                                                     fontWeight: FontWeight.bold,
                                                     color: Color(0xFF222222),
                                                   ),
                                                 ),
-                                                SizedBox(height: 4),
+                                                const SizedBox(height: 4),
                                                 Text(
                                                   timestamp
                                                       .toDate()
                                                       .toString(),
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     fontSize: 12,
                                                     color: Color(0xFF888888),
                                                   ),
@@ -180,26 +190,17 @@ class _UserhomepageState extends State<Userhomepage> {
                                               ],
                                             ),
                                           ),
-                                          IconButton(
-                                            icon: Icon(
-                                              Icons.more_vert,
-                                              color: Colors.grey,
-                                            ),
-                                            onPressed: () {
-                                              // Handle options click
-                                            },
-                                          ),
                                         ],
                                       ),
-                                      SizedBox(height: 12),
+                                      const SizedBox(height: 12),
                                       Text(
                                         reviewText,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 16,
                                           color: Color(0xFF444444),
                                         ),
                                       ),
-                                      SizedBox(height: 16),
+                                      const SizedBox(height: 16),
                                       Row(
                                         children: [
                                           IconButton(
@@ -208,7 +209,7 @@ class _UserhomepageState extends State<Userhomepage> {
                                                   ? Icons.thumb_up_alt
                                                   : Icons.thumb_up_alt_outlined,
                                               color: hasLiked
-                                                  ? Color(0xFF0072FF)
+                                                  ? const Color(0xFF0072FF)
                                                   : Colors.grey,
                                             ),
                                             onPressed: () async {
@@ -222,10 +223,10 @@ class _UserhomepageState extends State<Userhomepage> {
                                               setState(() {});
                                             },
                                           ),
-                                          SizedBox(width: 4),
+                                          const SizedBox(width: 4),
                                           Text(
                                             '$likesCount likes',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold,
                                               color: Color(0xFF444444),
@@ -282,7 +283,7 @@ class _UserhomepageState extends State<Userhomepage> {
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16),
                     backgroundColor:
-                    const Color(0xFFE989BE), // Button color
+                    const Color(0xFFEFCFE1), // Button color
                     shape: const CircleBorder(), // Circular button shape
                   ),
                   child: const Icon(
@@ -298,7 +299,7 @@ class _UserhomepageState extends State<Userhomepage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
-        selectedItemColor: const Color(0xFF0072FF),
+        selectedItemColor: const Color(0xFFEFCFE1),
         unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(

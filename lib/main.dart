@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
         '/manageUsers': (context) => const UsersWidget(),
         '/flaggedReviews': (context) => const FlaggedreviewsWidget(),
         '/createAccount': (context) => CreateAccountWidget(),
-        '/myreviews': (context) => const MyReviews(),
+        '/myreviews': (context) => const myreviews(),
         // Add route for CreateAccountWidget
       },
     );

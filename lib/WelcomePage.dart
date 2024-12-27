@@ -30,7 +30,7 @@ class WelcomePage extends StatelessWidget {
                   children: [
                     Text(
                       "Welcome to FoodieFinder",
-                      style: GoogleFonts.pacifico(
+                      style: GoogleFonts.lilyScriptOne(
                         fontSize: 36,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -49,7 +49,7 @@ class WelcomePage extends StatelessWidget {
                       "Discover your next favorite restaurant\nand share your experiences.",
                       style: GoogleFonts.balooTamma2(
                         fontSize: 16,
-                        color: Colors.white70,
+                        color: Colors.white,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -73,17 +73,17 @@ class WelcomePage extends StatelessWidget {
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      backgroundColor: const Color(0xFFE989BE),
+                      backgroundColor: const Color(0xFFEFCFE1),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
                     child: Text(
                       'Get Started',
-                      style: GoogleFonts.balooTamma2(
-                        fontSize: 12,
+                      style: GoogleFonts.lilyScriptOne(
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Colors.white70,
                       ),
                     ),
                   ),

@@ -70,10 +70,10 @@ class ManageMyreviewsState extends State<Managemyreviews> {
           ).createShader(bounds),
           child: Text(
             'Manage Reviews',
-            style: GoogleFonts.pacifico(
+            style: GoogleFonts.lilyScriptOne(
               fontSize: 26,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: Colors.white70,
             ),
           ),
         ),

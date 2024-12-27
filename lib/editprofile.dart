@@ -30,10 +30,10 @@ class _SettingsWidgetState extends State<editprofile> {
             ).createShader(bounds),
             child: Text(
               'Settings',
-              style: GoogleFonts.pacifico(
+              style: GoogleFonts.lilyScriptOne(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: Colors.white70,
               ),
             ),
           ),

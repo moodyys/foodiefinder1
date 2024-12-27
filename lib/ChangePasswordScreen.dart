@@ -50,10 +50,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           centerTitle: true,
           title: Text(
             'Change Password',
-            style: GoogleFonts.pacifico(
+            style: GoogleFonts.lilyScriptOne(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: Colors.white70,
             ),
           ),
           flexibleSpace: Container(
@@ -88,7 +88,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       "Make sure your new password is strong and easy to remember.",
                       style: TextStyle(
                         fontSize: 14,
-                        color: Color(0xFF606A85),
+                        color: Colors.red,
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -120,10 +120,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         ),
                         child: Text(
                           'Save Changes',
-                          style: GoogleFonts.lato(
+                          style: GoogleFonts.lilyScriptOne(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                            color: Colors.white70,
                           ),
                         ),
                       ),

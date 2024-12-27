@@ -30,6 +30,7 @@ class _UserhomepageState extends State<Userhomepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         elevation: 5,
         centerTitle: true,
         title: ShaderMask(
@@ -40,10 +41,10 @@ class _UserhomepageState extends State<Userhomepage> {
           ).createShader(bounds),
           child: Text(
             'Foodie Finders',
-            style: GoogleFonts.pacifico(
+            style: GoogleFonts.lilyScriptOne(
               fontSize: 30,
               fontWeight: FontWeight.bold,
-              color: Colors.white, // This acts as a placeholder for the gradient.
+              color: Colors.white70, // Placeholder for the gradient.
             ),
           ),
         ),
@@ -57,221 +58,248 @@ class _UserhomepageState extends State<Userhomepage> {
           ),
         ),
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFFF4F9FD), Color(0xFFE1EAF5)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0, vertical: 20.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Feed',
-                    style: GoogleFonts.balooTamma2(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF333333),
-                    ),
-                  ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFFF4F9FD), Color(0xFFE1EAF5)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-                child: Row(
+              child: SingleChildScrollView(
+                child: Column(
                   children: [
-                    // Expanded widget for the text field
-                    Expanded(
-                      child: TextField(
-                        controller: newReviewController,
-                        minLines: 1, // Initial height
-                        maxLines: null, // Expands as needed
-                        decoration: InputDecoration(
-                          hintText: "Share with your fellow foodie finders",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: Colors.grey),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: Color(0xFFE989BE)),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 12.0, horizontal: 16.0),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 20.0),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Stack(
+                          children: [
+                            Text(
+                              'Fork and Feed',
+                              style: GoogleFonts.boogaloo(
+                                fontSize: 35,
+                                fontWeight: FontWeight.w600,
+                                foreground: Paint()
+                                  ..style = PaintingStyle.stroke
+                                  ..strokeWidth = 4
+                                  ..color = Colors.black,
+                              ),
+                            ),
+
+                            Text(
+                              'Fork and Feed',
+                              style: GoogleFonts.boogaloo(
+                                fontSize: 35,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    const SizedBox(width: 10), // Space between the text field and button
-                    // Post button with only an icon
-                    ElevatedButton(
-                      onPressed: () { postReview(); },
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.all(16),
-                        backgroundColor: const Color(0xFFE989BE), // Button color
-                        shape: const CircleBorder(), // Circular button shape
-                      ),
-                      child: const Icon(
-                        Icons.send, // Icon for the post button
-                        size: 24,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
 
-              // StreamBuilder to display reviews and likes in real-time
-              StreamBuilder<QuerySnapshot>(
-                stream: database.getReviewsStream(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  }
 
-                  if (snapshot.hasError) {
-                    return Center(child: Text('Error loading reviews'));
-                  }
+                    StreamBuilder<QuerySnapshot>(
+                      stream: database.getReviewsStream(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(child: CircularProgressIndicator());
+                        }
 
-                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return Center(child: Text('No reviews available.'));
-                  }
+                        if (snapshot.hasError) {
+                          return const Center(child: Text('Error loading reviews'));
+                        }
 
-                  // If data is available, display reviews
-                  final reviews = snapshot.data!.docs;
+                        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                          return const Center(child: Text('No reviews available.'));
+                        }
 
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: reviews.length,
-                    itemBuilder: (context, index) {
-                      var review = reviews[index];
-                      String reviewText = review['reviewText'];
-                      String username = review['useremail'];  // Assuming useremail is used as username
-                      int likesCount = (review['likes'] as List).length;
-                      Timestamp timestamp = review['timestamp'];
-                      String reviewID = review.id;
+                        // If data is available, display reviews
+                        final reviews = snapshot.data!.docs;
 
-                      // Check if the user has liked this review
-                      bool hasLiked = (review['likes'] as List).contains(FirebaseAuth.instance.currentUser!.email);
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: reviews.length,
+                          itemBuilder: (context, index) {
+                            var review = reviews[index];
+                            String reviewText = review['reviewText'];
+                            String username = review['useremail'];
+                            int likesCount = (review['likes'] as List).length;
+                            Timestamp timestamp = review['timestamp'];
+                            String reviewID = review.id;
 
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                blurRadius: 8,
-                                offset: Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                            // Check if the user has liked this review
+                            bool hasLiked = (review['likes'] as List)
+                                .contains(FirebaseAuth.instance.currentUser!
+                                .email);
+
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
                                         children: [
-                                          Text(
-                                            username,  // Display the username/email
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                              color: Color(0xFF222222),
-                                            ),
-                                          ),
-                                          SizedBox(height: 4),
-                                          Text(
-                                            timestamp.toDate().toString(),
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Color(0xFF888888),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  username,
+                                                  style: const TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color(0xFF222222),
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Text(
+                                                  timestamp
+                                                      .toDate()
+                                                      .toString(),
+                                                  style: const TextStyle(
+                                                    fontSize: 12,
+                                                    color: Color(0xFF888888),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                    IconButton(
-                                      icon: Icon(
-                                        Icons.more_vert,
-                                        color: Colors.grey,
+                                      const SizedBox(height: 12),
+                                      Text(
+                                        reviewText,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          color: Color(0xFF444444),
+                                        ),
                                       ),
-                                      onPressed: () {
-                                        // Handle options click
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 12),
-                                Text(
-                                  reviewText,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Color(0xFF444444),
+                                      const SizedBox(height: 16),
+                                      Row(
+                                        children: [
+                                          IconButton(
+                                            icon: Icon(
+                                              hasLiked
+                                                  ? Icons.thumb_up_alt
+                                                  : Icons.thumb_up_alt_outlined,
+                                              color: hasLiked
+                                                  ? const Color(0xFF0072FF)
+                                                  : Colors.grey,
+                                            ),
+                                            onPressed: () async {
+                                              if (hasLiked) {
+                                                await database
+                                                    .unlikeReview(reviewID);
+                                              } else {
+                                                await database
+                                                    .likeReview(reviewID);
+                                              }
+                                              setState(() {});
+                                            },
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            '$likesCount likes',
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xFF444444),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                SizedBox(height: 16),
-                                Row(
-                                  children: [
-                                    IconButton(
-                                      icon: Icon(
-                                        hasLiked
-                                            ? Icons.thumb_up_alt // Filled blue icon if liked
-                                            : Icons.thumb_up_alt_outlined, // Outline if not liked
-                                        color: hasLiked ? Color(0xFF0072FF) : Colors.grey,
-                                      ),
-                                      onPressed: () async {
-                                        if (hasLiked) {
-                                          // If already liked, unlike it
-                                          await database.unlikeReview(reviewID);
-                                        } else {
-                                          // If not liked, like it
-                                          await database.likeReview(reviewID);
-                                        }
-                                        setState(() {}); // Refresh UI to reflect the changes
-                                      },
-                                    ),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      '$likesCount likes',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xFF444444),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                },
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ],
+            ),
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+            child: Row(
+              children: [
+                // Expanded widget for the text field
+                Expanded(
+                  child: TextField(
+                    controller: newReviewController,
+                    minLines: 1, // Initial height
+                    maxLines: null, // Expands as needed
+                    decoration: InputDecoration(
+                      hintText: "Share with your fellow foodie finders",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFFE989BE)),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 12.0, horizontal: 16.0),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                    width: 10), // Space between the text field and button
+                // Post button with only an icon
+                ElevatedButton(
+                  onPressed: () {
+                    postReview();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.all(16),
+                    backgroundColor:
+                    const Color(0xFFEFCFE1), // Button color
+                    shape: const CircleBorder(), // Circular button shape
+                  ),
+                  child: const Icon(
+                    Icons.send, // Icon for the post button
+                    size: 24,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
-        selectedItemColor: const Color(0xFF0072FF),
+        selectedItemColor: const Color(0xFFEFCFE1),
         unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(
@@ -291,7 +319,7 @@ class _UserhomepageState extends State<Userhomepage> {
           if (index == 0) {
             Navigator.pushNamed(context, '/userHomePage');
           } else if (index == 1) {
-            Navigator.pushNamed(context,'/myreviews');
+            Navigator.pushNamed(context, '/myreviews');
           } else if (index == 2) {
             Navigator.push(
               context,

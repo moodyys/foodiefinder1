@@ -59,10 +59,10 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
         centerTitle: true,
         title: Text(
           'Create Account',
-          style: GoogleFonts.pacifico(
+          style: GoogleFonts.lilyScriptOne(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: Colors.white70,
           ),
         ),
         flexibleSpace: Container(
@@ -85,11 +85,11 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Create a New Account',
-                    style: GoogleFonts.pacifico(
+                    'Fill in your information',
+                    style: GoogleFonts.lilyScriptOne(
                       fontSize: 36,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFFE989BE),
+                      color: const Color(0xFFEFCFE1),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -142,7 +142,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                   ElevatedButton(
                     onPressed: _signUp,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFE989BE),
+                      backgroundColor: const Color(0xFFEFCFE1),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -150,10 +150,10 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                     ),
                     child: Text(
                       'Create Account',
-                      style: GoogleFonts.balooTamma2(
-                        fontSize: 12,
+                      style: GoogleFonts.lilyScriptOne(
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Colors.white70,
                       ),
                     ),
                   ),

@@ -37,10 +37,10 @@ class _RestaurantsPageState extends State<restaurants> {
             ).createShader(bounds),
             child: Text(
               'Restaurants',
-              style: GoogleFonts.pacifico(
+              style: GoogleFonts.lilyScriptOne(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: Colors.white70,
               ),
             ),
           ),
@@ -206,7 +206,7 @@ class _RestaurantsPageState extends State<restaurants> {
                     MaterialPageRoute(builder: (context) =>  chatbot()),
                   );
                 },
-                backgroundColor: const Color(0xFFE989BE),
+                backgroundColor: const Color(0xFFEFCFE1),
                 child: const Icon(Icons.message, color: Colors.white),
               ),
             ),

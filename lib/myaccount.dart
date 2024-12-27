@@ -34,10 +34,10 @@ class myaccount extends StatelessWidget {
           ).createShader(bounds),
           child: Text(
             'My Account',
-            style: GoogleFonts.pacifico(
+            style: GoogleFonts.lilyScriptOne(
               fontSize: 28,
               fontWeight: FontWeight.bold,
-              color: Colors.white, // Placeholder for gradient
+              color: Colors.white70, // Placeholder for gradient
             ),
           ),
         ),

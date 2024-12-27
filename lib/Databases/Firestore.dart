@@ -84,7 +84,7 @@ class FirestoreDatabase{
       await commentsCollection.add({
         'commentText': '', // Empty initial comment text
         'timestamp': Timestamp.now(),
-        'userEmail': userEmail,
+        'commentedBy': userEmail,
       });
 
       print("Comments collection initialized successfully!");

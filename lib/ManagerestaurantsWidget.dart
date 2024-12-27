@@ -119,7 +119,7 @@ class _ManagerestaurantsWidgetState extends State<ManagerestaurantsWidget> {
             ).createShader(bounds),
             child: Text(
               'Manage Restaurants',
-              style: GoogleFonts.lilyScriptOne(
+              style: GoogleFonts.bubblegumSans(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
                 color: Colors.white70,
@@ -129,7 +129,7 @@ class _ManagerestaurantsWidgetState extends State<ManagerestaurantsWidget> {
           flexibleSpace: Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: [Color(0xFFE989BE), Color(0xFFEDFFC3)],
+                colors: [Color(0xFFE989BE), Color(0xFF6A1B9A)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),

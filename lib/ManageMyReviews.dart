@@ -15,6 +15,12 @@ class ManageMyreviewsState extends State<Managemyreviews> {
   final FirestoreDatabase database = FirestoreDatabase();
   User? currentUser = FirebaseAuth.instance.currentUser;
 
+  Future<DocumentSnapshot<Map<String, dynamic>>> getUserDetails() async {
+    return await FirebaseFirestore.instance
+        .collection("users")
+        .doc(currentUser!.email)
+        .get();
+  }
   bool hasLiked(List<dynamic> likes) {
     return likes.contains(currentUser!.email);
   }

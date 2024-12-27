@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'AdminDashBoard.dart';
-import 'login.dart'; // Import the LoginPage
+import 'WelcomePage.dart';
+import 'login.dart';
 
 class AdminLoginPage extends StatefulWidget {
   const AdminLoginPage({Key? key}) : super(key: key);
@@ -12,37 +14,52 @@ class AdminLoginPage extends StatefulWidget {
 }
 
 class _AdminLoginPageState extends State<AdminLoginPage> {
-  final TextEditingController _idController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _passwordVisible = false;
   String? errorMessage;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   void dispose() {
-    _idController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
   Future<void> _signIn() async {
     try {
-      // Replace Firebase auth logic with admin-specific logic
-      // Example: Authenticate using admin credentials (modify this to your needs)
-      if (_idController.text.trim() == "admin" && _passwordController.text.trim() == "admin123") {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const AdminDashBoard()),
-        );
+      // Authenticate using email and password
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      // Check if the user exists in the "Admins" collection using email
+      QuerySnapshot adminQuery = await _firestore
+          .collection('Admins')
+          .where('email', isEqualTo: _emailController.text.trim())
+          .get();
+
+      if (adminQuery.docs.isNotEmpty) {
+        Navigator.pushNamed(context, '/adminDashboard');
       } else {
         setState(() {
-          errorMessage = "Invalid Admin ID or Password.";
+          errorMessage = "You do not have admin access.";
         });
+        await _auth.signOut();
       }
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
       setState(() {
-        errorMessage = "An error occurred: $e";
+        if (e.code == 'user-not-found') {
+          errorMessage = "No admin found for that email.";
+        } else if (e.code == 'wrong-password') {
+          errorMessage = "Wrong password provided for that admin.";
+        } else {
+          errorMessage = "An error occurred: ${e.message}";
+        }
       });
     }
   }
@@ -53,45 +70,56 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: const Color(0xFFE989BE),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              // Navigate back to the LoginPage when back button is pressed
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginPage()), // Navigate to LoginPage
-              );
-            },
-          ),
+          elevation: 5,
+          centerTitle: true,
           title: Text(
             'Admin Login',
-            style: GoogleFonts.balooTamma2(
-              fontSize: 24,
+            style: GoogleFonts.lilyScriptOne(
+              fontSize: 30,
               fontWeight: FontWeight.bold,
-              color: const Color(0xFFF4F9FD),
+              color: Colors.white70,
             ),
           ),
           flexibleSpace: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: [Color(0xFFE989BE), Color(0xFF6A1B9A)], // Gradient color
+                colors: [Color(0xFFE989BE), Color(0xFFEDFFC3)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
             ),
           ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const WelcomePage()),
+              );
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                );
+              },
+              child: Text(
+                'Login as User',
+                style: GoogleFonts.balooTamma2(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
         ),
         body: SafeArea(
           child: Container(
-            height: double.infinity, // Ensures the container fills the screen
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xFFF3E5F5), Color(0xFFEDE7F6)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
+            color: Colors.white,
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -99,11 +127,11 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Welcome Admin',
-                      style: GoogleFonts.pacifico(
+                      'Admin Portal',
+                      style: GoogleFonts.lilyScriptOne(
                         fontSize: 36,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF000000),
+                        color: const Color(0xFFEFCFE1),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -117,11 +145,12 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                       ),
                     const SizedBox(height: 16),
                     TextField(
-                      controller: _idController,
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
-                        labelText: 'Admin ID',
+                        labelText: 'Email',
                         labelStyle: GoogleFonts.balooTamma2(
-                          color: const Color(0xFF6A1B9A),
+                          color: const Color(0xFFE989BE),
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -137,7 +166,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                       decoration: InputDecoration(
                         labelText: 'Password',
                         labelStyle: GoogleFonts.balooTamma2(
-                          color: const Color(0xFF6A1B9A),
+                          color: const Color(0xFFE989BE),
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -149,7 +178,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                             _passwordVisible
                                 ? Icons.visibility
                                 : Icons.visibility_off,
-                            color: const Color(0xFF6A1B9A),
+                            color: const Color(0xFFE989BE),
                           ),
                           onPressed: () {
                             setState(() {
@@ -163,7 +192,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                     ElevatedButton(
                       onPressed: _signIn,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF6A1B9A), // Purple color
+                        backgroundColor: const Color(0xFFEFCFE1),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -171,11 +200,35 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                       ),
                       child: Text(
                         'Login',
-                        style: GoogleFonts.balooTamma2(
+                        style: GoogleFonts.lilyScriptOne(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: Colors.white70,
                         ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    RichText(
+                      text: TextSpan(
+                        text: "Don't have access? ",
+                        style: GoogleFonts.balooTamma2(
+                          color: Colors.grey[600],
+                          fontSize: 14,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: 'Contact Support',
+                            style: GoogleFonts.balooTamma2(
+                              color: const Color(0xFFE989BE),
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                // Add support contact logic here
+                              },
+                          ),
+                        ],
                       ),
                     ),
                   ],

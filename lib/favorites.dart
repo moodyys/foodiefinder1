@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class favorites extends StatefulWidget {
   const favorites({super.key});
@@ -9,6 +11,24 @@ class favorites extends StatefulWidget {
 }
 
 class _FavoritesState extends State<favorites> {
+  // Current user reference
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  User? user = FirebaseAuth.instance.currentUser;
+
+  // Function to fetch user favorites from Firestore
+  Future<List<String>> getUserFavorites() async {
+    try {
+      DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(user!.email);
+      DocumentSnapshot userSnapshot = await userRef.get();
+
+      List<dynamic> currentFavorites = userSnapshot.exists ? userSnapshot['favorites'] ?? [] : [];
+      return List<String>.from(currentFavorites);
+    } catch (e) {
+      print('Error fetching favorites: $e');
+      return [];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -50,73 +70,138 @@ class _FavoritesState extends State<favorites> {
               end: Alignment.bottomCenter,
             ),
           ),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: List.generate(5, (index) => _buildFavoriteItem()),
-              ),
-            ),
+          child: FutureBuilder<List<String>>(
+            future: getUserFavorites(),  // Fetch the user's favorite restaurant IDs
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              }
+
+              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(child: Text('No favorites found.'));
+              }
+
+              final favoriteIds = snapshot.data!;
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: favoriteIds.map((restaurantId) => _buildFavoriteItem(restaurantId)).toList(),
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ),
     );
   }
 
-  Widget _buildFavoriteItem() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: Material(
-        elevation: 2,
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
+  Widget _buildFavoriteItem(String restaurantId) {
+    return FutureBuilder<DocumentSnapshot>(
+      future: FirebaseFirestore.instance.collection('restaurants').doc(restaurantId).get(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+
+        if (!snapshot.hasData || !snapshot.data!.exists) {
+          return const Center(child: Text('Restaurant not found.'));
+        }
+
+        final restaurant = snapshot.data!;
+        final name = restaurant['name'];
+        final address = restaurant['address'];
+        final desc = restaurant['desc'];
+
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: Material(
+            elevation: 2,
             borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start, // Aligns items to start
                   children: [
-                    Text(
-                      'Favorite Item ${DateTime.now().microsecond}',
-                      style: GoogleFonts.balooTamma2(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF15161E),
+                    Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: const Color(0x4D9489F5),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: const Color(0xFF6F61EF)),
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Description of favorite item.',
-                      style: GoogleFonts.balooTamma2(
-                        fontSize: 14,
-                        color: const Color(0xFF606A85),
+                    const SizedBox(width: 12),
+                    Expanded(  // Make sure the column takes up available space
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            name,
+                            style: GoogleFonts.balooTamma2(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF15161E),
+                            ),
+                            overflow: TextOverflow.ellipsis,  // Ensure name is truncated if too long
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            address,
+                            style: GoogleFonts.balooTamma2(
+                              fontSize: 14,
+                              color: const Color(0xFF606A85),
+                            ),
+                            overflow: TextOverflow.ellipsis,  // Ensure address is truncated if too long
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            desc,
+                            style: GoogleFonts.balooTamma2(
+                              fontSize: 12,
+                              color: const Color(0xFF6F61EF),
+                            ),
+                            softWrap: true,  // Ensures description wraps when text overflows
+                            overflow: TextOverflow.fade,  // Fade out the description if it's too long
+                          ),
+                        ],
                       ),
+                    ),
+                    const Icon(
+                      Icons.favorite,
+                      color: Color(0xFFFF6B81),
+                      size: 24,
                     ),
                   ],
                 ),
-                const Icon(
-                  Icons.favorite,
-                  color: Color(0xFFFF6B81),
-                  size: 24,
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
+
 }

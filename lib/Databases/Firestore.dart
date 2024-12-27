@@ -4,28 +4,56 @@ import 'package:firebase_auth/firebase_auth.dart';
 class FirestoreDatabase{
   User? user= FirebaseAuth.instance.currentUser;
 
+  Future<String> getUsername(String email) async {
+    try {
+      // Query the `users` collection for the document with the matching email
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('useremail', isEqualTo: email)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // Return the `username` from the matching document
+        return querySnapshot.docs.first['username'];
+      } else {
+        print("No user found with email: $email");
+        return 'Anonymous';
+      }
+    } catch (e) {
+      print("Error fetching username: $e");
+      return 'Anonymous';
+    }
+  }
+
 
   final CollectionReference reviews = FirebaseFirestore.instance.collection('reviews');
   Future<void> addReview(String review) async {
     try {
+      String? userEmail = user?.email;
+      if (userEmail == null) {
+        print("Error: User is not logged in.");
+        return;
+      }
+
+      // Fetch the username for the current user
+      String username = await getUsername(userEmail);
+
       // Add the review to Firestore
-      DocumentReference reviewRef = await reviews.add({
-        'useremail': user!.email,
+      await reviews.add({
+        'useremail': userEmail,
+        'username': username, // Include the retrieved username
         'reviewText': review,
         'timestamp': Timestamp.now(),
-        'likes': [], // Initially, no one has liked the review
+        'likes': [], // Initially, no likes
       });
-
-      // After adding the review, update the document with its own reviewID
-      await reviewRef.update({
-        'reviewID': reviewRef.id, // Firestore's auto-generated ID will serve as the reviewID
-      });
-
-      print('Review added with ID: ${reviewRef.id}');
+      print("Review added successfully!");
     } catch (e) {
-      print('Error adding review: $e');
+      print("Error adding review: $e");
     }
   }
+      // After adding the review, update the document with its own reviewID
+
 
 
   Stream<QuerySnapshot> getReviewsStream(){
@@ -141,8 +169,27 @@ class FirestoreDatabase{
     }
   }
 
-
-
+  // Future<void> toggleFavorite(String restaurantId, String userId) async {
+  //   try {
+  //     DocumentReference userRef = FirebaseFirestore.instance.collection('users').doc(userId);
+  //     DocumentSnapshot userSnapshot = await userRef.get();
+  //
+  //     List<dynamic> currentFavorites = userSnapshot.exists
+  //         ? userSnapshot['favorites'] ?? []
+  //         : [];
+  //
+  //     if (!currentFavorites.contains(restaurantId)) {
+  //       await userRef.update({
+  //         'favorites': FieldValue.arrayUnion([restaurantId]),
+  //       });
+  //       print('Restaurant $restaurantId added to favorites');
+  //     } else {
+  //       print('Restaurant $restaurantId is already in your favorites');
+  //     }
+  //   } catch (e) {
+  //     print('Error toggling favorite: $e');
+  //   }
+  // }
 
 }
 

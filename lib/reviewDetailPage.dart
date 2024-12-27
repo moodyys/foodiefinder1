@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';  // Google Fonts package for st
 import 'package:firebase_auth/firebase_auth.dart';  // Firebase Authentication for user identity
 import 'package:foodiefinder1/Databases/Firestore.dart';  // Custom Firestore database helper functions
 import 'myaccount.dart';  // Account page to navigate when user profile is clicked
-
+import 'Databases/Firestore.dart';
 
 
 class ReviewDetailPage extends StatelessWidget {

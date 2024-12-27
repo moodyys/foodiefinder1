@@ -11,6 +11,8 @@ import 'Settings02Widget.dart'; // Import Settings02Widget
 import 'AnalyticsWidget.dart'; // Import AnalyticsWidget
 import 'CreateAccountWidget.dart'; // Import CreateAccountWidget
 import 'myreviews.dart';
+import 'Databases/csvScript.dart';
+import 'Databases/namelower.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +30,8 @@ void main() async {
         measurementId: "G-83H6EK1C0C",
       ),
     );
+    // csvScript();
+    // nameLower();
   }
 
   runApp(MyApp());

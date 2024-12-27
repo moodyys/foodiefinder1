@@ -19,6 +19,20 @@ class _MyReviewsState extends State<myreviews> {
   final FirestoreDatabase database = FirestoreDatabase();
   final User? currentUser = FirebaseAuth.instance.currentUser;
 
+  Future<void> signOut() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      // Navigate to the login screen after signing out
+      Navigator.pushReplacementNamed(context, '/login'); // Update the route as per your app
+      print('User signed out successfully');
+    } catch (e) {
+      print('Error signing out: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error signing out: $e')),
+      );
+    }
+  }
+
   bool hasLiked(List<dynamic> likes) {
     return likes.contains(currentUser!.email);
   }
@@ -185,6 +199,8 @@ class _MyReviewsState extends State<myreviews> {
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
+                      signOut();
+
                       print('User logged out');
                     },
                     style: ElevatedButton.styleFrom(

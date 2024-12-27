@@ -13,6 +13,7 @@ import 'CreateAccountWidget.dart'; // Import CreateAccountWidget
 import 'myreviews.dart';
 import 'Databases/csvScript.dart';
 import 'Databases/namelower.dart';
+import 'login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,9 +48,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+        debugShowCheckedModeBanner: false,
       home: const WelcomePage(), // Set WelcomePage as the initial screen
       routes: {
-        '/userHomepage': (context) =>  Userhomepage(), // Route for Userhomepage
+        '/userHomepage': (context) =>  Userhomepage(),
+        '/login': (context) =>  LoginPage(), // Route for Userhomepage
         '/adminDashboard': (context) => const AdminDashBoard(),
         '/adminLogin': (context) => const AdminLoginPage(), // Add route for AdminLoginPage
         '/analytics': (context) => const AnalyticsWidget(),

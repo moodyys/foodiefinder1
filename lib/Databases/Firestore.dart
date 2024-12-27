@@ -26,8 +26,37 @@ class FirestoreDatabase{
     }
   }
 
-
+  Stream<QuerySnapshot> getCommentsStream(String reviewId) {
+    return FirebaseFirestore.instance
+        .collection('reviews')
+        .doc(reviewId)
+        .collection('comments')
+        .orderBy('timestamp', descending: true)
+        .snapshots();
+  }
   final CollectionReference reviews = FirebaseFirestore.instance.collection('reviews');
+  Future<void> addCommentToReview(String reviewId, String commentText) async {
+    try {
+      // Get the current user's email
+      String? userEmail = user?.email;
+      if (userEmail == null) {
+        print("Error: User is not logged in.");
+        return;
+      }
+
+      // Create a comment document with user details and comment text
+      await reviews.doc(reviewId).collection('comments').add({
+        'commentText': commentText,
+        'commentedBy': userEmail, // Store the user's email who commented
+        'timestamp': FieldValue.serverTimestamp(), // Store the timestamp when the comment was posted
+      });
+
+      print("Comment added successfully to review ID: $reviewId");
+    } catch (e) {
+      print("Error adding comment: $e");
+    }
+  }
+
   Future<void> addReview(String review) async {
     try {
       String? userEmail = user?.email;
@@ -40,21 +69,34 @@ class FirestoreDatabase{
       String username = await getUsername(userEmail);
 
       // Add the review to Firestore
-      await reviews.add({
+      var reviewDoc = await reviews.add({
         'useremail': userEmail,
         'username': username, // Include the retrieved username
         'reviewText': review,
         'timestamp': Timestamp.now(),
         'likes': [], // Initially, no likes
       });
+
       print("Review added successfully!");
+
+      // Create a sub-collection for comments in the review document
+      var commentsCollection = reviewDoc.collection('comments');
+      await commentsCollection.add({
+        'commentText': '', // Empty initial comment text
+        'timestamp': Timestamp.now(),
+        'userEmail': userEmail,
+      });
+
+      print("Comments collection initialized successfully!");
     } catch (e) {
       print("Error adding review: $e");
     }
   }
       // After adding the review, update the document with its own reviewID
 
-
+  Stream<DocumentSnapshot> getReviewDetailsStream(String reviewID) {
+    return reviews.doc(reviewID).snapshots();
+  }
 
   Stream<QuerySnapshot> getReviewsStream(){
     final reviewStream=FirebaseFirestore.instance.collection('reviews').orderBy('timestamp',descending: true).snapshots();
@@ -130,44 +172,44 @@ class FirestoreDatabase{
     }
   }
 
-  Future<void> addComment(String reviewID, String commentText) async {
-    try {
-      await FirebaseFirestore.instance.collection('reviews').doc(reviewID).collection('comments').add({
-        'useremail': FirebaseAuth.instance.currentUser!.email,
-        'commentText': commentText,
-        'timestamp': FieldValue.serverTimestamp(),
-        'likes': [],
-      });
-    } catch (e) {
-      print('Error adding comment: $e');
-    }
-  }
-
-  Future<void> likeComment(String reviewID, String commentID) async {
-    try {
-      var commentRef = FirebaseFirestore.instance
-          .collection('reviews')
-          .doc(reviewID)
-          .collection('comments')
-          .doc(commentID);
-
-      var userEmail = FirebaseAuth.instance.currentUser!.email;
-
-      var commentSnapshot = await commentRef.get();
-      if (commentSnapshot.exists) {
-        var likes = List<String>.from(commentSnapshot['likes']);
-        if (!likes.contains(userEmail)) {
-          likes.add(userEmail!); // Add like if not already liked
-          await commentRef.update({'likes': likes});
-        } else {
-          likes.remove(userEmail); // Remove like if already liked
-          await commentRef.update({'likes': likes});
-        }
-      }
-    } catch (e) {
-      print('Error liking/unliking comment: $e');
-    }
-  }
+  // Future<void> addComment(String reviewID, String commentText) async {
+  //   try {
+  //     await FirebaseFirestore.instance.collection('reviews').doc(reviewID).collection('comments').add({
+  //       'useremail': FirebaseAuth.instance.currentUser!.email,
+  //       'commentText': commentText,
+  //       'timestamp': FieldValue.serverTimestamp(),
+  //       'likes': [],
+  //     });
+  //   } catch (e) {
+  //     print('Error adding comment: $e');
+  //   }
+  // }
+  //
+  // Future<void> likeComment(String reviewID, String commentID) async {
+  //   try {
+  //     var commentRef = FirebaseFirestore.instance
+  //         .collection('reviews')
+  //         .doc(reviewID)
+  //         .collection('comments')
+  //         .doc(commentID);
+  //
+  //     var userEmail = FirebaseAuth.instance.currentUser!.email;
+  //
+  //     var commentSnapshot = await commentRef.get();
+  //     if (commentSnapshot.exists) {
+  //       var likes = List<String>.from(commentSnapshot['likes']);
+  //       if (!likes.contains(userEmail)) {
+  //         likes.add(userEmail!); // Add like if not already liked
+  //         await commentRef.update({'likes': likes});
+  //       } else {
+  //         likes.remove(userEmail); // Remove like if already liked
+  //         await commentRef.update({'likes': likes});
+  //       }
+  //     }
+  //   } catch (e) {
+  //     print('Error liking/unliking comment: $e');
+  //   }
+  // }
 
   // Future<void> toggleFavorite(String restaurantId, String userId) async {
   //   try {

@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-        debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,
       home: const WelcomePage(), // Set WelcomePage as the initial screen
       routes: {
         '/userHomepage': (context) =>  Userhomepage(),

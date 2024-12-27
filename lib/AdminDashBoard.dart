@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'Settings02Widget.dart';
 import 'AnalyticsWidget.dart'; // Import the AnalyticsWidget
+import 'AdminProfileSettingsScreen.dart'; // Import the ProfileSettingsScreen
+import 'AdminLogin.dart'; // Import the AdminLoginPage
 import 'package:google_fonts/google_fonts.dart';
 
 class AdminDashBoard extends StatelessWidget {
@@ -12,7 +14,7 @@ class AdminDashBoard extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Admin Dashboard',
-          style: GoogleFonts.balooTamma2(
+          style: GoogleFonts.bubblegumSans(
             fontSize: 40,
             fontWeight: FontWeight.bold,
             color: Colors.white, // Set the color to white
@@ -20,32 +22,12 @@ class AdminDashBoard extends StatelessWidget {
         ),
         centerTitle: true,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.account_circle, size: 30),
-            onPressed: () {
-              // Add navigation or functionality for the profile icon
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text('Profile'),
-                  content: const Text('Profile functionality coming soon!'),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('Close'),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+          // Removed the profile button here
         ],
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xFFE989BE), Color(0xFFEDFFC3)], // Use the same gradient
+              colors: [Color(0xFFE989BE), Color(0xFF6A1B9A)], // Use the same gradient
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -53,10 +35,85 @@ class AdminDashBoard extends StatelessWidget {
         ),
         elevation: 4,
       ),
+      drawer: Drawer(
+        child: Column(
+          children: [
+            // Profile section
+            UserAccountsDrawerHeader(
+              accountName: Text(
+                'Admin Name',
+                style: GoogleFonts.bubblegumSans(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ), // You can dynamically add the name here
+              accountEmail: Text(
+                'admin@example.com',
+                style: GoogleFonts.bubblegumSans(
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
+              ), // Dynamically add email
+              currentAccountPicture: CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Icon(Icons.account_circle, size: 50),
+              ),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFFE989BE), Color(0xFF6A1B9A)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+            ),
+            // Profile settings button
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text(
+                'Profile Settings',
+                style: GoogleFonts.bubblegumSans(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              onTap: () {
+                // Navigate to profile settings screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AdminProfileSettingsScreen()),
+                );
+              },
+            ),
+            // Logout button
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text(
+                'Logout',
+                style: GoogleFonts.bubblegumSans(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              onTap: () {
+                // Close the drawer
+                Navigator.pop(context);
+                // Navigate to the AdminLoginPage
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AdminLoginPage()), // Navigate to AdminLoginPage
+                );
+              },
+            ),
+          ],
+        ),
+      ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFFE989BE), Color(0xFFEDFFC3)], // Use the same gradient
+            colors: [Color(0xFFF3E5F5), Color(0xFFEDE7F6)], // Set the new gradient
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -69,7 +126,7 @@ class AdminDashBoard extends StatelessWidget {
                 context,
                 title: 'Analytics',
                 icon: Icons.analytics,
-                gradientColors: [Color(0xFFE989BE), Color(0xFFEDFFC3)], // Use the same gradient
+                gradientColors: [Color(0xFFE989BE), Color(0xFF6A1B9A)], // Use the same gradient
                 onPressed: () {
                   // Navigate to the AnalyticsWidget screen
                   Navigator.push(
@@ -83,7 +140,7 @@ class AdminDashBoard extends StatelessWidget {
                 context,
                 title: 'Settings',
                 icon: Icons.settings,
-                gradientColors: [Color(0xFFE989BE), Color(0xFFEDFFC3)], // Use the same gradient
+                gradientColors: [Color(0xFFE989BE), Color(0xFF6A1B9A)], // Use the same gradient
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -132,8 +189,7 @@ class AdminDashBoard extends StatelessWidget {
             const SizedBox(width: 10),
             Text(
               title,
-              style: const TextStyle(
-                fontFamily: 'Inter',
+              style: GoogleFonts.bubblegumSans(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,

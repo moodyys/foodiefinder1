@@ -65,11 +65,20 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
             },
           ),
           title: Text(
-            'Welcome Admin',
+            'Admin Login',
             style: GoogleFonts.balooTamma2(
               fontSize: 24,
               fontWeight: FontWeight.bold,
               color: const Color(0xFFF4F9FD),
+            ),
+          ),
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFFE989BE), Color(0xFF6A1B9A)], // Gradient color
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
             ),
           ),
         ),
@@ -78,7 +87,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
             height: double.infinity, // Ensures the container fills the screen
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Color(0xFFE989BE), Color(0xFFEDFFC3)],
+                colors: [Color(0xFFF3E5F5), Color(0xFFEDE7F6)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -94,7 +103,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                       style: GoogleFonts.pacifico(
                         fontSize: 36,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFFF4F9FD),
+                        color: const Color(0xFF000000),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -112,7 +121,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                       decoration: InputDecoration(
                         labelText: 'Admin ID',
                         labelStyle: GoogleFonts.balooTamma2(
-                          color: const Color(0xFFE989BE),
+                          color: const Color(0xFF6A1B9A),
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -128,7 +137,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                       decoration: InputDecoration(
                         labelText: 'Password',
                         labelStyle: GoogleFonts.balooTamma2(
-                          color: const Color(0xFFE989BE),
+                          color: const Color(0xFF6A1B9A),
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -140,7 +149,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                             _passwordVisible
                                 ? Icons.visibility
                                 : Icons.visibility_off,
-                            color: const Color(0xFFE989BE),
+                            color: const Color(0xFF6A1B9A),
                           ),
                           onPressed: () {
                             setState(() {
@@ -154,7 +163,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                     ElevatedButton(
                       onPressed: _signIn,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFE989BE),
+                        backgroundColor: const Color(0xFF6A1B9A), // Purple color
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),

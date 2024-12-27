@@ -80,7 +80,7 @@ class ManageMyreviewsState extends State<Managemyreviews> {
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xFFE989BE), Color(0xFFEDFFC3)],
+              colors: [Color(0xFFE989BE), Color(0xFF6A1B9A)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),

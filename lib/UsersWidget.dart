@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -17,154 +16,118 @@ class _UsersWidgetState extends State<UsersWidget> {
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
-        FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Color(0x6257636C),
-          automaticallyImplyLeading: false,
           title: Text(
             'Manage Users',
-            style: GoogleFonts.inter(
-              fontSize: 24,
-              fontWeight: FontWeight.w500,
+            style: GoogleFonts.bubblegumSans(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Colors.white, // Set the title color to white
             ),
           ),
-          actions: [
-            Padding(
-              padding: EdgeInsets.only(right: 12),
-              child: IconButton(
-                icon: Icon(
-                  Icons.add_circle_outline_rounded,
-                  color: Colors.grey,
-                  size: 30,
-                ),
-                onPressed: () {
-                  print('IconButton pressed ...');
-                },
+          centerTitle: true,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFFE989BE), Color(0xFF6A1B9A)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
             ),
-          ],
-          centerTitle: false,
-          elevation: 0,
-        ),
-        body: SafeArea(
-          top: true,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 3,
-                        color: Color(0x33000000),
-                        offset: Offset(0, 1),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 1),
-                  child: ListView.builder(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: 5, // Replace with dynamic count if needed
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: EdgeInsets.only(bottom: 1),
-                        child: Container(
-                          height: 72,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 0,
-                                color: Colors.grey,
-                                offset: Offset(0, 1),
-                              )
-                            ],
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width: 44,
-                                  height: 44,
-                                  decoration: BoxDecoration(
-                                    color: Colors.blueAccent,
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: Colors.blue,
-                                      width: 2,
-                                    ),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(44),
-                                    child: Image.network(
-                                      'https://picsum.photos/seed/183/600',
-                                      width: 44,
-                                      height: 44,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(left: 12),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(bottom: 4),
-                                          child: Text(
-                                            'Random Name',
-                                            style: GoogleFonts.inter(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          'user@randomname.com',
-                                          style: GoogleFonts.inter(
-                                            fontSize: 14,
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.delete_forever,
-                                    color: Colors.black,
-                                    size: 24,
-                                  ),
-                                  onPressed: () {
-                                    print('IconButton pressed ...');
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
+          ),
+          elevation: 4,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.add_circle_outline_rounded, color: Colors.white),
+              onPressed: () {
+                print('Add user button pressed');
+              },
             ),
+          ],
+        ),
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFFF3E5F5), Color(0xFFEDE7F6)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16.0),
+            itemCount: 5, // Replace with dynamic count
+            itemBuilder: (context, index) {
+              return _buildUserCard('User ${index + 1}', 'user${index + 1}@example.com');
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUserCard(String name, String email) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: const Color(0xFF6A1B9A), width: 2),
+                ),
+                child: const CircleAvatar(
+                  backgroundImage: NetworkImage('https://picsum.photos/seed/183/600'),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: GoogleFonts.bubblegumSans( // Set text in Bubblegum Sans
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      email,
+                      style: GoogleFonts.bubblegumSans( // Set text in Bubblegum Sans
+                        fontSize: 14,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.delete_forever, color: Colors.red),
+                onPressed: () {
+                  print('Delete button pressed for $name');
+                },
+              ),
+            ],
           ),
         ),
       ),

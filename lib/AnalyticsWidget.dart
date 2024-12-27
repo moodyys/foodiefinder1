@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AnalyticsWidget extends StatefulWidget {
   const AnalyticsWidget({Key? key}) : super(key: key);
@@ -13,25 +14,25 @@ class _AnalyticsWidgetState extends State<AnalyticsWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Analytics',
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Inter',
+          style: GoogleFonts.bubblegumSans(
+            fontSize: 30,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
           ),
         ),
         centerTitle: true,
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xFF4A148C), Color(0xFF6A1B9A)],
+              colors: [Color(0xFFE989BE), Color(0xFF6A1B9A)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
           ),
         ),
-        elevation: 4,
+        elevation: 5,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
@@ -42,9 +43,9 @@ class _AnalyticsWidgetState extends State<AnalyticsWidget> {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFFF3E5F5), Color(0xFFEDE7F6)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+            colors: [Color(0xFFF4F9FD), Color(0xFFE1EAF5)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
         ),
         child: Padding(
@@ -52,19 +53,19 @@ class _AnalyticsWidgetState extends State<AnalyticsWidget> {
           child: ListView(
             children: [
               const SizedBox(height: 10),
-              _buildSection('JUNE', const Color(0xFF7B1FA2)),
+              _buildSection('JUNE', const Color(0xFFE989BE)),
               const SizedBox(height: 20),
               _buildChart(),
               const SizedBox(height: 30),
-              _buildSection('JULY', const Color(0xFF4A90E2)),
+              _buildSection('JULY', const Color(0xFFE989BE)),
               const SizedBox(height: 20),
               _buildChart(),
               const SizedBox(height: 30),
-              _buildSection('AUGUST', const Color(0xFF4CAF50)),
+              _buildSection('AUGUST', const Color(0xFFE989BE)),
               const SizedBox(height: 20),
               _buildChart(),
               const SizedBox(height: 30),
-              _buildSection('SEPTEMBER', const Color(0xFFFF5722)),
+              _buildSection('SEPTEMBER', const Color(0xFFE989BE)),
               const SizedBox(height: 20),
               _buildChart(),
             ],
@@ -91,12 +92,11 @@ class _AnalyticsWidgetState extends State<AnalyticsWidget> {
       child: Center(
         child: Text(
           title,
-          style: TextStyle(
-            fontSize: 20,
+          style: GoogleFonts.bubblegumSans( // Updated to Bubblegum Sans
+            fontSize: 22,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.5,
             color: color,
-            fontFamily: 'Inter',
           ),
         ),
       ),
@@ -134,7 +134,7 @@ class _AnalyticsWidgetState extends State<AnalyticsWidget> {
                   ],
                   isCurved: true,
                   gradient: const LinearGradient(
-                    colors: [Color(0xFF42A5F5), Color(0xFF80DEEA)],
+                    colors: [Color(0xFFE989BE), Color(0xFF6A1B9A)],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                   ),
@@ -143,8 +143,8 @@ class _AnalyticsWidgetState extends State<AnalyticsWidget> {
                     show: true,
                     gradient: LinearGradient(
                       colors: [
-                        const Color(0xFF42A5F5).withOpacity(0.3),
-                        const Color(0xFF80DEEA).withOpacity(0.3),
+                        const Color(0xFF6A1B9A).withOpacity(0.3),
+                        const Color(0xFF6A1B9A).withOpacity(0.3),
                       ],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
@@ -161,10 +161,10 @@ class _AnalyticsWidgetState extends State<AnalyticsWidget> {
                     getTitlesWidget: (value, meta) {
                       return Text(
                         value.toInt().toString(),
-                        style: const TextStyle(
+                        style: GoogleFonts.bubblegumSans( // Updated to Bubblegum Sans
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black54,
+                          color: const Color(0xFF444444),
                         ),
                       );
                     },
@@ -177,10 +177,10 @@ class _AnalyticsWidgetState extends State<AnalyticsWidget> {
                     getTitlesWidget: (value, meta) {
                       return Text(
                         value.toInt().toString(),
-                        style: const TextStyle(
+                        style: GoogleFonts.bubblegumSans( // Updated to Bubblegum Sans
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black54,
+                          color: const Color(0xFF444444),
                         ),
                       );
                     },
@@ -193,15 +193,15 @@ class _AnalyticsWidgetState extends State<AnalyticsWidget> {
                 drawVerticalLine: false,
                 horizontalInterval: 1,
                 getDrawingHorizontalLine: (value) => FlLine(
-                  color: Colors.black12,
+                  color: const Color(0xFFCCCCCC),
                   strokeWidth: 1,
                 ),
               ),
               borderData: FlBorderData(
                 show: true,
                 border: const Border(
-                  left: BorderSide(color: Colors.black12, width: 1),
-                  bottom: BorderSide(color: Colors.black12, width: 1),
+                  left: BorderSide(color: Color(0xFFCCCCCC), width: 1),
+                  bottom: BorderSide(color: Color(0xFFCCCCCC), width: 1),
                 ),
               ),
             ),

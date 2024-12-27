@@ -13,7 +13,7 @@ class _ManagerestaurantsWidgetState extends State<ManagerestaurantsWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   // List to hold restaurant names
-  List<String> restaurantNames = [];
+  List<String> restaurantNames = ['Restaurant 1', 'Restaurant 2', 'Restaurant 3'];
 
   // Function to show dialog for adding a restaurant
   void _showAddRestaurantDialog() {
@@ -22,10 +22,13 @@ class _ManagerestaurantsWidgetState extends State<ManagerestaurantsWidget> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Add New Restaurant'),
+        title: Text(
+          'Add New Restaurant',
+          style: GoogleFonts.bubblegumSans(), // Set the title in Bubblegum Sans
+        ),
         content: TextField(
           controller: nameController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: 'Enter restaurant name',
           ),
         ),
@@ -34,7 +37,7 @@ class _ManagerestaurantsWidgetState extends State<ManagerestaurantsWidget> {
             onPressed: () {
               Navigator.pop(context); // Close the dialog
             },
-            child: Text('Cancel'),
+            child: Text('Cancel', style: GoogleFonts.bubblegumSans()), // Use Bubblegum Sans
           ),
           TextButton(
             onPressed: () {
@@ -45,7 +48,7 @@ class _ManagerestaurantsWidgetState extends State<ManagerestaurantsWidget> {
                 Navigator.pop(context); // Close the dialog
               }
             },
-            child: Text('Add'),
+            child: Text('Add', style: GoogleFonts.bubblegumSans()), // Use Bubblegum Sans
           ),
         ],
       ),
@@ -57,131 +60,107 @@ class _ManagerestaurantsWidgetState extends State<ManagerestaurantsWidget> {
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
-        FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Color(0x7557636C),
-          automaticallyImplyLeading: false,
           title: Text(
             'Manage Restaurants',
-            style: GoogleFonts.inter(
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
+            style: GoogleFonts.bubblegumSans(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Colors.white, // Set the title color to white
             ),
           ),
-          actions: [
-            Padding(
-              padding: EdgeInsets.only(right: 12),
-              child: IconButton(
-                icon: Icon(
-                  Icons.add_circle_outline_rounded,
-                  color: Colors.grey,
-                  size: 30,
-                ),
-                onPressed: _showAddRestaurantDialog,
+          centerTitle: true,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFFE989BE), Color(0xFF6A1B9A)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
             ),
+          ),
+          elevation: 4,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.add_circle_outline_rounded, color: Colors.white),
+              onPressed: _showAddRestaurantDialog,
+            ),
           ],
-          centerTitle: false,
-          elevation: 0,
         ),
-        body: SafeArea(
-          top: true,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(top: 1),
-                  child: ListView.builder(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: restaurantNames.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: EdgeInsets.only(bottom: 1),
-                        child: Container(
-                          height: 72,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 0,
-                                color: Colors.grey[400]!,
-                                offset: Offset(0, 1),
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width: 44,
-                                  height: 44,
-                                  decoration: BoxDecoration(
-                                    color: Colors.blueAccent,
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: Colors.blue,
-                                      width: 2,
-                                    ),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(44),
-                                    child: Image.network(
-                                      'https://picsum.photos/seed/${index + 1}/600',
-                                      width: 44,
-                                      height: 44,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(left: 12),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          restaurantNames[index],
-                                          style: GoogleFonts.inter(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.delete_forever,
-                                    color: Colors.black,
-                                    size: 24,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      restaurantNames.removeAt(index);
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFFF3E5F5), Color(0xFFEDE7F6)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16.0),
+            itemCount: restaurantNames.length,
+            itemBuilder: (context, index) {
+              return _buildRestaurantCard(restaurantNames[index]);
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRestaurantCard(String name) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: const Color(0xFF6A1B9A), width: 2),
+                ),
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(
+                    'https://picsum.photos/seed/${name.hashCode}/600',
                   ),
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  name,
+                  style: GoogleFonts.bubblegumSans( // Set text in Bubblegum Sans
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.delete_forever, color: Colors.red),
+                onPressed: () {
+                  setState(() {
+                    restaurantNames.remove(name);
+                  });
+                },
+              ),
+            ],
           ),
         ),
       ),

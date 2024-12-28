@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Changeusernamescreen extends StatefulWidget {
   const Changeusernamescreen({super.key});
@@ -17,6 +19,55 @@ class _ChangeusernamescreenState extends State<Changeusernamescreen> {
     _usernameTextController.dispose();
     _usernameFocusNode.dispose();
     super.dispose();
+  }
+
+  Future<void> updateUsername(String newUsername) async {
+    try {
+      // Get the current user's email
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No user is currently signed in.'),
+          ),
+        );
+        return;
+      }
+
+      String userEmail = user.email!;
+
+      // Update the username in the Firestore "users" collection
+      await FirebaseFirestore.instance
+          .collection('users')
+          .where('useremail', isEqualTo: userEmail)
+          .limit(1)
+          .get()
+          .then((querySnapshot) async {
+        if (querySnapshot.docs.isNotEmpty) {
+          await querySnapshot.docs.first.reference.update({'username': newUsername});
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('User not found in the database.'),
+            ),
+          );
+        }
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Username updated successfully!'),
+        ),
+      );
+    } catch (e) {
+      print('Error updating username: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to update username: $e'),
+        ),
+      );
+    }
   }
 
   @override
@@ -116,9 +167,8 @@ class _ChangeusernamescreenState extends State<Changeusernamescreen> {
                             ),
                           );
                         } else {
-                          // Add functionality to update the username here
-                          print(
-                              'Username changed to: ${_usernameTextController.text}');
+                          // Update username in Firestore
+                          updateUsername(_usernameTextController.text);
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -133,8 +183,7 @@ class _ChangeusernamescreenState extends State<Changeusernamescreen> {
                         style: GoogleFonts.lilyScriptOne(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: Colors.white70
-                          ,
+                          color: Colors.white70,
                         ),
                       ),
                     ),

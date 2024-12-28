@@ -1,39 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'Settings02Widget.dart';
-import 'AnalyticsWidget.dart';
-import 'AdminProfileSettingsScreen.dart';
-import 'AdminLogin.dart';
+import 'AnalyticsWidget.dart'; // Import the AnalyticsWidget
+import 'AdminProfileSettingsScreen.dart'; // Import the ProfileSettingsScreen
+import 'AdminLogin.dart'; // Import the AdminLoginPage
+import 'package:google_fonts/google_fonts.dart';
 
 class AdminDashBoard extends StatelessWidget {
   const AdminDashBoard({Key? key}) : super(key: key);
-
-  Future<Map<String, String>> fetchAdminDetails() async {
-    final User? currentUser = FirebaseAuth.instance.currentUser;
-
-    if (currentUser != null) {
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection("Admins")
-          .where("email", isEqualTo: currentUser.email)
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        final data = querySnapshot.docs.first.data() as Map<String, dynamic>;
-        return {
-          "name": data["adminname"] ?? "Admin",
-          "email": data["email"] ?? currentUser.email!,
-        };
-      }
-    }
-
-    // Fallback if user details are not found
-    return {
-      "name": "Admin",
-      "email": "admin@example.com",
-    };
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,14 +17,17 @@ class AdminDashBoard extends StatelessWidget {
           style: GoogleFonts.bubblegumSans(
             fontSize: 40,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: Colors.white, // Set the color to white
           ),
         ),
         centerTitle: true,
+        actions: [
+          // Removed the profile button here
+        ],
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xFFE989BE), Color(0xFF6A1B9A)],
+              colors: [Color(0xFFE989BE), Color(0xFF6A1B9A)], // Use the same gradient
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -60,103 +36,84 @@ class AdminDashBoard extends StatelessWidget {
         elevation: 4,
       ),
       drawer: Drawer(
-        child: FutureBuilder<Map<String, String>>(
-          future: fetchAdminDetails(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            if (snapshot.hasError || !snapshot.hasData) {
-              return const Center(
-                child: Text(
-                  'Failed to load admin details. Please check your connection or Firestore setup.',
-                  textAlign: TextAlign.center,
+        child: Column(
+          children: [
+            // Profile section
+            UserAccountsDrawerHeader(
+              accountName: Text(
+                'Admin Name',
+                style: GoogleFonts.bubblegumSans(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
-              );
-            }
-
-            final adminDetails = snapshot.data!;
-            final name = adminDetails["name"]!;
-            final email = adminDetails["email"]!;
-
-            return ListView(
-              children: [
-                UserAccountsDrawerHeader(
-                  accountName: Text(
-                    name,
-                    style: GoogleFonts.bubblegumSans(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  accountEmail: Text(
-                    email,
-                    style: GoogleFonts.bubblegumSans(
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
-                  ),
-                  currentAccountPicture: const CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: Icon(Icons.account_circle, size: 50),
-                  ),
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color(0xFFE989BE), Color(0xFF6A1B9A)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                  ),
+              ), // You can dynamically add the name here
+              accountEmail: Text(
+                'admin@example.com',
+                style: GoogleFonts.bubblegumSans(
+                  fontSize: 16,
+                  color: Colors.white,
                 ),
-                ListTile(
-                  leading: const Icon(Icons.settings),
-                  title: Text(
-                    'Profile Settings',
-                    style: GoogleFonts.bubblegumSans(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                          const AdminProfileSettingsScreen()),
-                    );
-                  },
+              ), // Dynamically add email
+              currentAccountPicture: CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Icon(Icons.account_circle, size: 50),
+              ),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFFE989BE), Color(0xFF6A1B9A)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                ListTile(
-                  leading: const Icon(Icons.logout),
-                  title: Text(
-                    'Logout',
-                    style: GoogleFonts.bubblegumSans(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  onTap: () {
-                    FirebaseAuth.instance.signOut();
-                    Navigator.pop(context); // Close the drawer
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => const AdminLoginPage()),
-                    );
-                  },
+              ),
+            ),
+            // Profile settings button
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text(
+                'Profile Settings',
+                style: GoogleFonts.bubblegumSans(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
-              ],
-            );
-          },
+              ),
+              onTap: () {
+                // Navigate to profile settings screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AdminProfileSettingsScreen()),
+                );
+              },
+            ),
+            // Logout button
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text(
+                'Logout',
+                style: GoogleFonts.bubblegumSans(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              onTap: () {
+                // Close the drawer
+                Navigator.pop(context);
+                // Navigate to the AdminLoginPage
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AdminLoginPage()), // Navigate to AdminLoginPage
+                );
+              },
+            ),
+          ],
         ),
       ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFFF3E5F5), Color(0xFFEDE7F6)],
+            colors: [Color(0xFFF3E5F5), Color(0xFFEDE7F6)], // Set the new gradient
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -169,12 +126,12 @@ class AdminDashBoard extends StatelessWidget {
                 context,
                 title: 'Analytics',
                 icon: Icons.analytics,
-                gradientColors: [Color(0xFFE989BE), Color(0xFF6A1B9A)],
+                gradientColors: [Color(0xFFE989BE), Color(0xFF6A1B9A)], // Use the same gradient
                 onPressed: () {
+                  // Navigate to the AnalyticsWidget screen
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => const AnalyticsWidget()),
+                    MaterialPageRoute(builder: (context) => const AnalyticsWidget()),
                   );
                 },
               ),
@@ -183,12 +140,11 @@ class AdminDashBoard extends StatelessWidget {
                 context,
                 title: 'Settings',
                 icon: Icons.settings,
-                gradientColors: [Color(0xFFE989BE), Color(0xFF6A1B9A)],
+                gradientColors: [Color(0xFFE989BE), Color(0xFF6A1B9A)], // Use the same gradient
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => const Settings02Widget()),
+                    MaterialPageRoute(builder: (context) => const Settings02Widget()),
                   );
                 },
               ),

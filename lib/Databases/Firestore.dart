@@ -81,11 +81,7 @@ class FirestoreDatabase{
 
       // Create a sub-collection for comments in the review document
       var commentsCollection = reviewDoc.collection('comments');
-      await commentsCollection.add({
-        'commentText': '', // Empty initial comment text
-        'timestamp': Timestamp.now(),
-        'commentedBy': userEmail,
-      });
+
 
       print("Comments collection initialized successfully!");
     } catch (e) {

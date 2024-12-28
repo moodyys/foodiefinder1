@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 class AnalyticsWidget extends StatefulWidget {
   const AnalyticsWidget({Key? key}) : super(key: key);
@@ -12,51 +10,6 @@ class AnalyticsWidget extends StatefulWidget {
 }
 
 class _AnalyticsWidgetState extends State<AnalyticsWidget> {
-  // Data storage for the analytics charts
-  List<FlSpot> juneData = [];
-  List<FlSpot> julyData = [];
-  List<FlSpot> augustData = [];
-  List<FlSpot> septemberData = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchAnalyticsData();
-  }
-
-  // Fetch data from Firestore
-  Future<void> _fetchAnalyticsData() async {
-    try {
-      // Fetch analytics data for different months
-      final juneSnapshot = await FirebaseFirestore.instance.collection('analytics').doc('june').get();
-      final julySnapshot = await FirebaseFirestore.instance.collection('analytics').doc('july').get();
-      final augustSnapshot = await FirebaseFirestore.instance.collection('analytics').doc('august').get();
-      final septemberSnapshot = await FirebaseFirestore.instance.collection('analytics').doc('september').get();
-
-      setState(() {
-        // Assume each document contains a list of points for that month
-        juneData = _getFlSpots(juneSnapshot);
-        julyData = _getFlSpots(julySnapshot);
-        augustData = _getFlSpots(augustSnapshot);
-        septemberData = _getFlSpots(septemberSnapshot);
-      });
-    } catch (e) {
-      print('Error fetching data: $e');
-    }
-  }
-
-  // Helper function to convert Firestore data to FlSpot
-  List<FlSpot> _getFlSpots(DocumentSnapshot snapshot) {
-    List<FlSpot> spots = [];
-    List<dynamic> data = snapshot['data']; // Assuming data is an array of [x, y] points
-
-    for (var point in data) {
-      spots.add(FlSpot(point[0].toDouble(), point[1].toDouble()));
-    }
-
-    return spots;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,19 +55,19 @@ class _AnalyticsWidgetState extends State<AnalyticsWidget> {
               const SizedBox(height: 10),
               _buildSection('JUNE', const Color(0xFFE989BE)),
               const SizedBox(height: 20),
-              _buildChart(juneData),
+              _buildChart(),
               const SizedBox(height: 30),
               _buildSection('JULY', const Color(0xFFE989BE)),
               const SizedBox(height: 20),
-              _buildChart(julyData),
+              _buildChart(),
               const SizedBox(height: 30),
               _buildSection('AUGUST', const Color(0xFFE989BE)),
               const SizedBox(height: 20),
-              _buildChart(augustData),
+              _buildChart(),
               const SizedBox(height: 30),
               _buildSection('SEPTEMBER', const Color(0xFFE989BE)),
               const SizedBox(height: 20),
-              _buildChart(septemberData),
+              _buildChart(),
             ],
           ),
         ),
@@ -139,7 +92,7 @@ class _AnalyticsWidgetState extends State<AnalyticsWidget> {
       child: Center(
         child: Text(
           title,
-          style: GoogleFonts.bubblegumSans(
+          style: GoogleFonts.bubblegumSans( // Updated to Bubblegum Sans
             fontSize: 22,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.5,
@@ -150,7 +103,7 @@ class _AnalyticsWidgetState extends State<AnalyticsWidget> {
     );
   }
 
-  Widget _buildChart(List<FlSpot> data) {
+  Widget _buildChart() {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
@@ -171,7 +124,14 @@ class _AnalyticsWidgetState extends State<AnalyticsWidget> {
             LineChartData(
               lineBarsData: [
                 LineChartBarData(
-                  spots: data,
+                  spots: const [
+                    FlSpot(0, 1),
+                    FlSpot(1, 3),
+                    FlSpot(2, 2),
+                    FlSpot(3, 1.5),
+                    FlSpot(4, 2.5),
+                    FlSpot(5, 3.5),
+                  ],
                   isCurved: true,
                   gradient: const LinearGradient(
                     colors: [Color(0xFFE989BE), Color(0xFF6A1B9A)],
@@ -201,7 +161,7 @@ class _AnalyticsWidgetState extends State<AnalyticsWidget> {
                     getTitlesWidget: (value, meta) {
                       return Text(
                         value.toInt().toString(),
-                        style: GoogleFonts.bubblegumSans(
+                        style: GoogleFonts.bubblegumSans( // Updated to Bubblegum Sans
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                           color: const Color(0xFF444444),
@@ -217,7 +177,7 @@ class _AnalyticsWidgetState extends State<AnalyticsWidget> {
                     getTitlesWidget: (value, meta) {
                       return Text(
                         value.toInt().toString(),
-                        style: GoogleFonts.bubblegumSans(
+                        style: GoogleFonts.bubblegumSans( // Updated to Bubblegum Sans
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                           color: const Color(0xFF444444),
